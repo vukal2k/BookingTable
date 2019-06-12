@@ -11,7 +11,7 @@
                     ON d.idnhahang = n.idnhahang
                     INNER JOIN taikhoan t
                     ON d.idtaikhoan=t.idtaikhoan
-                    WHERE n.idnhahang = ".$viewModel->idNhaHang;
+                    WHERE n.idnhahang = ".$viewModel->id;
 
         $filter="";
         if($viewModel->ngayDenFilterFrom!="" && $viewModel->ngayDenFilterTo!=""){
@@ -35,7 +35,7 @@
 
 <!-- method post, pram: 
 viewModel: {
-		"idNhaHang":"1",
+		"id":"1",
 		"ngayDenFilterFrom": "",
 		"ngayDenFilterTo":"",
 		"searchKey":""
