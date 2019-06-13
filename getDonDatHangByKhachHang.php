@@ -15,12 +15,12 @@
 
         $filter="";
         if($viewModel->ngayDenFilterFrom!="" && $viewModel->ngayDenFilterTo!=""){
-            $filter = $filter."AND d.ngayden>='".$viewModel->ngayDenFilterFrom."'
+            $filter = $filter." AND d.ngayden>='".$viewModel->ngayDenFilterFrom."'
                                 AND d.ngayden <='".$viewModel->ngayDenFilterTo."'";
         }
         if($viewModel->searchKey != ""){
-            $filter = $filter."AND n.tennhahang LIKE '%".$viewModel->searchKey."%' 
-                                OR n.sdt LIKE '%".$viewModel->searchKey."%'";
+            $filter = $filter." AND (n.tennhahang LIKE '%".$viewModel->searchKey."%' 
+                                OR n.sdt LIKE '%".$viewModel->searchKey."%')";
         }
 
         $query=$query.$filter;
