@@ -8,7 +8,7 @@
     class Database
     {
         /**
-         * Khai báo bi?n k?t n?i
+         * Khai bï¿½o bi?n k?t n?i
          * @var [type]
          */
         public $link;
@@ -22,7 +22,7 @@
         
 
         /**
-         * [insert description] hàm insert 
+         * [insert description] hï¿½m insert 
          * @param  $table
          * @param  array  $data  
          * @return integer
@@ -48,38 +48,8 @@
             return mysqli_insert_id($this->link);
         }
 
-        public function update($table, array $data, array $conditions) 
+        public function update($sql) 
         {
-            $sql = "UPDATE {$table}";
-
-            $set = " SET ";
-
-            $where = " WHERE ";
-
-            foreach($data as $field => $value) {
-                if(is_string($value)) {
-                    $set .= $field .'='.'\''. mysqli_real_escape_string($this->link, xss_clean($value)) .'\',';
-                } else {
-                    $set .= $field .'='. mysqli_real_escape_string($this->link, xss_clean($value)) . ',';
-                }
-            }
-
-            $set = substr($set, 0, -1);
-
-
-            foreach($conditions as $field => $value) {
-                if(is_string($value)) {
-                    $where .= $field .'='.'\''. mysqli_real_escape_string($this->link, xss_clean($value)) .'\' AND ';
-                } else {
-                    $where .= $field .'='. mysqli_real_escape_string($this->link, xss_clean($value)) . ' AND ';
-                }
-            }
-
-            $where = substr($where, 0, -5);
-
-            $sql .= $set . $where;
-            // _debug($sql);die;
-
             mysqli_query($this->link, $sql) or die( "L?i truy v?n Update -- " .mysqli_error());
 
            // return mysqli_affected_rows($this->link);
@@ -101,17 +71,17 @@
 
 
         /**
-         * [delete description] hàm delete
+         * [delete description] hï¿½m delete
          * @param  $table      [description]
          * @param  array  $conditions [description]
          * @return integer             [description]
          */
-        public function delete ($table ,  $id ) //delete by id
+        public function delete ($table , $idColumnName,$id ) //delete by id
         {
-            $sql = "DELETE FROM {$table} WHERE id = $id ";
+            $sql = "DELETE FROM {$table} WHERE $idColumnName = $id ";
 
             mysqli_query($this->link,$sql) or die (" L?i Truy V?n delete   --- " .mysqli_error($this->link));
-            return mysqli_affected_rows($this->link);
+            return 1;
         }
 
         /**
