@@ -19,9 +19,9 @@
                                 AND d.ngayden <='".$viewModel->ngayDenFilterTo."'";
         }
         if($viewModel->searchKey != ""){
-            $filter = $filter." AND (t.tenkhachhang LIKE '%".$viewModel->searchKey."%' 
+            $filter = $filter." AND t.tenkhachhang LIKE '%".$viewModel->searchKey."%' 
                                 OR t.sdt LIKE '%".$viewModel->searchKey."%' 
-                                OR t.email LIKE '%".$viewModel->searchKey."%')";
+                                OR t.email LIKE '%".$viewModel->searchKey."%'";
         }
 
         $query=$query.$filter;
