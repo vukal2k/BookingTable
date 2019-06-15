@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.FormMain.ThanhPhoModel;
+import model.ThanhPhoModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

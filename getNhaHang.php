@@ -32,7 +32,7 @@ $mangNH = array();
 while ($row = mysqli_fetch_assoc($data)) {
   	array_push($mangNH, new NhaHang($row ['idnhahang'],  $row ['idtaikhoan'], $row ['tennhahang'], $row ['diachi'], $row ['uudai'], $row ['loaihinh'], $row ['idkhuvuc'], $row ['hinhanh']));
 
-  }
+}
 
 //4. Chuyển định dạng của mảng -> Json
 echo json_encode($mangNH);

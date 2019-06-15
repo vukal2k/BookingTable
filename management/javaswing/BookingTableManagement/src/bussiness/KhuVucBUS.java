@@ -15,8 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.FormMain.KhuVucModel;
-import model.FormMain.KhuVucViewModel;
+import model.KhuVucModel;
+import model.KhuVucViewModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
