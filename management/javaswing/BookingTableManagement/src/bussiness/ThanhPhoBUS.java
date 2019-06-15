@@ -13,6 +13,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.FormMain.ThanhPhoModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,18 +36,23 @@ public final class ThanhPhoBUS{
         return listThanhPho;
     }
     
-    public static ArrayList timKiem(String searchKey) throws UnsupportedEncodingException{
-        String thanhPhoJson = ApiHelper.getData(ApiThanhPho.TimKiem+"?searchkey="+URLEncoder.encode(searchKey, "UTF-8"));
-        
-        JSONArray jsonArray = new JSONArray(thanhPhoJson);
-        JSONObject jsonObject;
-        ArrayList listThanhPho = new ArrayList();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            jsonObject = jsonArray.getJSONObject(i);
-            Gson gson = new Gson(); 
-            listThanhPho.add(gson.fromJson(jsonObject.toString(), ThanhPhoModel.class));
+    public static ArrayList timKiem(String searchKey){
+        try {
+            String thanhPhoJson = ApiHelper.getData(ApiThanhPho.TimKiem+"?searchkey="+URLEncoder.encode(searchKey, "UTF-8"));
+            
+            JSONArray jsonArray = new JSONArray(thanhPhoJson);
+            JSONObject jsonObject;
+            ArrayList listThanhPho = new ArrayList();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObject = jsonArray.getJSONObject(i);
+                Gson gson = new Gson();
+                listThanhPho.add(gson.fromJson(jsonObject.toString(), ThanhPhoModel.class));
+            }
+            return listThanhPho;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(ThanhPhoBUS.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listThanhPho;
+        return new ArrayList();
     }
     
     public static String Them(ThanhPhoModel thanhPho){
@@ -85,7 +92,7 @@ public final class ThanhPhoBUS{
     }
     
     public static String Xoa(int idThanhPho){
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", idThanhPho+"");
         
         String response = ApiHelper.postData(ApiThanhPho.Xoa, params);

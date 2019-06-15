@@ -13,6 +13,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.FormMain.KhuVucModel;
 import model.FormMain.KhuVucViewModel;
 import org.json.JSONArray;
@@ -40,18 +42,24 @@ public class KhuVucBUS {
         return listKhucVuc;
     }
     
-    public static ArrayList timKiem(String searchKey) throws UnsupportedEncodingException{
-        String khuVucJson = ApiHelper.getData(ApiKhuVuc.TimKiem+"?searchkey="+URLEncoder.encode(searchKey, "UTF-8"));
-        
-        JSONArray jsonArray = new JSONArray(khuVucJson);
-        JSONObject jsonObject;
-        ArrayList listKhucVuc = new ArrayList();
-        for (int i = 0; i < jsonArray.length(); i++) {
-            jsonObject = jsonArray.getJSONObject(i);
-            Gson gson = new Gson(); 
-            listKhucVuc.add(gson.fromJson(jsonObject.toString(), KhuVucViewModel.class));
+    public static ArrayList timKiem(String searchKey){
+        try {
+            String khuVucJson = ApiHelper.getData(ApiKhuVuc.TimKiem+"?searchkey="+URLEncoder.encode(searchKey, "UTF-8"));
+            
+            JSONArray jsonArray = new JSONArray(khuVucJson);
+            JSONObject jsonObject;
+            ArrayList listKhucVuc = new ArrayList();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                jsonObject = jsonArray.getJSONObject(i);
+                Gson gson = new Gson();
+                listKhucVuc.add(gson.fromJson(jsonObject.toString(), KhuVucViewModel.class));
+            }
+            return listKhucVuc;
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(KhuVucBUS.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return listKhucVuc;
+        
+        return new ArrayList();
     }
     
     public static String Them(KhuVucModel khuVuc){
@@ -97,7 +105,7 @@ public class KhuVucBUS {
     }
     
     public static String Xoa(int idKhuVuc){
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", idKhuVuc+"");
         
         String response = ApiHelper.postData(ApiKhuVuc.Xoa, params);

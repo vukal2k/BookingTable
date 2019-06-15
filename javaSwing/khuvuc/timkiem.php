@@ -2,7 +2,6 @@
     require "../../database.php";
 
     $searchKey = $_GET['searchkey'];
-    echo $searchKey; dỉe();
     if(isset($searchKey)){
         $database = new database();
         $result = $database->fetchsql("select k.idkhuvuc,k.idthanhpho,k.tenkhuvuc,t.tenthanhpho from khuvuc k
@@ -10,6 +9,6 @@
                                         ON k.idthanhpho=t.idthanhpho
                                         WHERE k.tenkhuvuc LIKE '%".$searchKey."%' OR t.tenthanhpho LIKE '%".$searchKey."%'");
         
-        //echo json_encode($result);
+        echo json_encode($result);
     }
 ?>
