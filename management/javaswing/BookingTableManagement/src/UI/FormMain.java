@@ -16,9 +16,13 @@ import javax.swing.table.DefaultTableModel;
 import commond.ComboboxItem;
 import commond.ComboboxItemRender;
 import commond.FileItemToPhp;
+import commond.ImageRenderer;
+import java.awt.HeadlessException;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -29,6 +33,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import model.KhuVucModel;
 import model.KhuVucViewModel;
+import model.NhaHangModel;
 import model.NhaHangViewModel;
 import model.TaiKhoanModel;
 import model.ThanhPhoModel;
@@ -54,7 +59,11 @@ public class FormMain extends javax.swing.JFrame {
         defaultTableKhuVuc=(DefaultTableModel)jTableKhuVuc.getModel();
         defaultTableTaiKhoan=(DefaultTableModel)jTableTaiKhoan.getModel();
         defaultTableNhaHang=(DefaultTableModel)jTableNhaHang.getModel();
-        jComboBoxKhuVuc_ThanhPho.setRenderer( new ComboboxItemRender() );
+        jTableNhaHang.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer());
+        
+//        jComboBoxKhuVuc_ThanhPho.setRenderer( new ComboboxItemRender() );
+//        jComboBoxNhaHang_KhuVuc.setRenderer( new ComboboxItemRender() );
+//        jComboBoxNhaHang_TaiKhoan.setRenderer( new ComboboxItemRender() );
         
         LoadThanhPho();
         LoadKhuVuc();
@@ -314,21 +323,38 @@ public class FormMain extends javax.swing.JFrame {
     
     // <editor-fold defaultstate="collapsed" desc="Tai Khoan">
     private void LoadNhaHang(){
-        ArrayList listNhaHang = NhaHangBUS.getAll();
-        NhaHangViewModel nhaHang;
-        defaultTableNhaHang.setRowCount(0);
-        
-        for (int i = 0; i < listNhaHang.size(); i++) {
-            nhaHang= (NhaHangViewModel)listNhaHang.get(i);
+        try {
+            ArrayList listNhaHang = NhaHangBUS.getAll();
+            NhaHangViewModel nhaHang;
+            defaultTableNhaHang.setRowCount(0);
+            URL url;
+            BufferedImage img;
+            for (int i = 0; i < listNhaHang.size(); i++) {
+                nhaHang= (NhaHangViewModel)listNhaHang.get(i);
+                
+                //url = new URL(nhaHang.getHinhanh());
+                url=new URL("http://sleeping.somee.com/Asset/img/roi-vi-vua-chuong-1.jpg");
+                img = ImageIO.read(url);
+                ImageIcon imageIcon =new ImageIcon(img.getScaledInstance(jLabelNhaHangHinhAnh.getWidth(), 
+                                                                                  jLabelNhaHangHinhAnh.getHeight(), 
+                                                                                  Image.SCALE_DEFAULT));
+                
+                defaultTableNhaHang.insertRow(i, new Object[]{
+                    nhaHang.getIdnhahang(), new ImageIcon(imageIcon.getImage()),
+                    nhaHang.getTennhahang(),nhaHang.getDiachi(),
+                    nhaHang.getTenkhuvuc(),nhaHang.getUsername(),
+                    nhaHang.getKhoangtien(),nhaHang.getLoaihinh(),
+                    nhaHang.getSdt(),nhaHang.getUudai(),
+                    nhaHang.getGiodonkhach(), nhaHang.getMota()
+                });
+            }
             
-            defaultTableNhaHang.insertRow(i, new Object[]{
-                nhaHang.getIdnhahang(), new ImageIcon(ApiUrl.Host+nhaHang.getHinhanh()),
-                nhaHang.getTennhahang(),nhaHang.getDiachi(),
-                nhaHang.getDiachi(),nhaHang.getTenkhuvuc(),
-                nhaHang.getUsername(),nhaHang.getKhoangtien(),
-                nhaHang.getLoaihinh(),nhaHang.getSdt(),
-                nhaHang.getUudai(),nhaHang.getGiodonkhach(), nhaHang.getMota()
-            });
+            LoadComboboxNhaHang_KhuVuc();
+            LoadComboboxNhaHang_TaiKhoan();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -352,73 +378,130 @@ public class FormMain extends javax.swing.JFrame {
     }
     
     private void ChonNhaHang(){
-        try {
-            jTextFieldNhaHangTen.setText(defaultTableNhaHang.getValueAt(jTableNhaHang.getSelectedRow(), 1).toString());
-            
-            ImageIcon imageHinhAnh = (ImageIcon)defaultTableNhaHang.getValueAt(jTableNhaHang.getSelectedRow(), 2);
-            File fileHinhAnh = new File(new URI(imageHinhAnh.getDescription()));
-            Image img = ImageIO.read(fileHinhAnh);
-            Image resizedImage = img.getScaledInstance(jLabelNhaHangHinhAnh.getWidth(), jLabelNhaHangHinhAnh.getHeight(), 0);
-            jLabelNhaHangHinhAnh.setIcon(new ImageIcon(resizedImage));
-            fileItemToPhp= null;
-            
-            
-        } catch (URISyntaxException | IOException ex) {
-            Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
+        int selectedRowIndex=jTableNhaHang.getSelectedRow();
+        jTextFieldNhaHangTen.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 2).toString());
+        //ImageIcon imageHinhAnh = (ImageIcon)defaultTableNhaHang.getValueAt(selectedRowIndex, 1);
+        ImageIcon image = (ImageIcon)defaultTableNhaHang.getValueAt(selectedRowIndex, 1);
+        ImageIcon imageHinhAnh = new ImageIcon(image.getImage().getScaledInstance(jLabelNhaHangHinhAnh.getWidth(), 
+                                                                                  jLabelNhaHangHinhAnh.getHeight(), 
+                                                                                  Image.SCALE_DEFAULT));
+        jLabelNhaHangHinhAnh.setIcon(imageHinhAnh);
+        fileItemToPhp= null;
+        jTextFieldNhaHangDiaChi.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 3).toString());
+        String selectedKhuVuc = defaultTableNhaHang.getValueAt(selectedRowIndex, 4).toString();
+        ComboboxItem item;
+        for (int i = 0; i < jComboBoxNhaHang_KhuVuc.getItemCount(); i++)
+        {
+            item = (ComboboxItem)jComboBoxNhaHang_KhuVuc.getItemAt(i);
+            if (item.getValue().equalsIgnoreCase(selectedKhuVuc))
+            {
+                jComboBoxNhaHang_KhuVuc.setSelectedIndex(i);
+                break;
+            }
         }
+        String selectedTaiKhoan = defaultTableNhaHang.getValueAt(selectedRowIndex, 5).toString();
+        for (int i = 0; i < jComboBoxNhaHang_TaiKhoan.getItemCount(); i++)
+        {
+            item = (ComboboxItem)jComboBoxNhaHang_TaiKhoan.getItemAt(i);
+            if (item.getValue().equalsIgnoreCase(selectedTaiKhoan))
+            {
+                jComboBoxNhaHang_TaiKhoan.setSelectedIndex(i);
+                break;
+            }
+        }
+        jTextFieldNhaHangKhoangTien.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 6).toString());
+        jTextFieldNhaHangLoaiHinh.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 7).toString());
+        jTextFieldNhaHangSdt.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 8).toString());
+        jTextFieldNhaHangUuDai.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 9).toString());
+        jTextFieldNhaHangGioDonKhach.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 10).toString());
+        jTextAreaNhaHangMoTa.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 11).toString());
     }
     
-    private void ThemTaiKhoan(){
-        TaiKhoanModel taiKhoan = new TaiKhoanModel();
-        taiKhoan.setUsername(jTextFieldTaiKhoanUsername.getText());
-        taiKhoan.setPassword(jTextFieldTaiKhoanPassword.getText());
-        taiKhoan.setTenkhachhang(jTextFieldTaiKhoanTen.getText());
-        taiKhoan.setSdt(jTextFieldTaiKhoanSdt.getText());
-        taiKhoan.setEmail(jTextFieldTaiKhoanEmail.getText());
+    private void ThemNhaHang(){
+        NhaHangModel nhaHang = new NhaHangModel();
+        nhaHang.setTennhahang(jTextFieldNhaHangTen.getText());
+        nhaHang.setDiachi(jTextFieldNhaHangDiaChi.getText());
+        nhaHang.setGiodonkhach(jTextFieldNhaHangGioDonKhach.getText());
         
-        JOptionPane.showMessageDialog(null, TaiKhoanBUS.Them(taiKhoan));
-        LoadTaiKhoan();
+        ComboboxItem itemSelected=(ComboboxItem)jComboBoxNhaHang_KhuVuc.getSelectedItem();
+        nhaHang.setIdkhuvuc(itemSelected.getKey());
+        
+        itemSelected=(ComboboxItem)jComboBoxNhaHang_TaiKhoan.getSelectedItem();
+        nhaHang.setIdtaikhoan(itemSelected.getKey());
+        
+        nhaHang.setKhoangtien(jTextFieldNhaHangKhoangTien.getText());
+        nhaHang.setLoaihinh(jTextFieldNhaHangLoaiHinh.getText());
+        nhaHang.setMota(jTextAreaNhaHangMoTa.getText());
+        nhaHang.setSdt(jTextFieldNhaHangSdt.getText());
+        nhaHang.setUudai(jTextFieldNhaHangUuDai.getText());
+        
+        JOptionPane.showMessageDialog(null, NhaHangBUS.Them(nhaHang,fileItemToPhp));
+        LoadNhaHang();
     }
     
-    private void SuaTaiKhoan(){
+    private void SuaNhaHang(){
         try {
-            TaiKhoanModel taiKhoan = new TaiKhoanModel();
-            taiKhoan.setUsername(jTextFieldTaiKhoanUsername.getText());
-            taiKhoan.setPassword(jTextFieldTaiKhoanPassword.getText());
-            taiKhoan.setTenkhachhang(jTextFieldTaiKhoanTen.getText());
-            taiKhoan.setSdt(jTextFieldTaiKhoanSdt.getText());
-            taiKhoan.setEmail(jTextFieldTaiKhoanEmail.getText());
-            taiKhoan.setIdtaikhoan((int) defaultTableTaiKhoan.getValueAt(jTableTaiKhoan.getSelectedRow(), 0));
+            NhaHangModel nhaHang = new NhaHangModel();
+            nhaHang.setIdnhahang(Integer.parseInt((String) defaultTableNhaHang.getValueAt(jTableNhaHang.getSelectedRow(), 0)));
+            nhaHang.setTennhahang(jTextFieldNhaHangTen.getText());
+            nhaHang.setDiachi(jTextFieldNhaHangDiaChi.getText());
+            nhaHang.setGiodonkhach(jTextFieldNhaHangGioDonKhach.getText());
 
-            JOptionPane.showMessageDialog(null, TaiKhoanBUS.Sua(taiKhoan));
-            LoadTaiKhoan();
+            ComboboxItem itemSelected=(ComboboxItem)jComboBoxNhaHang_KhuVuc.getSelectedItem();
+            nhaHang.setIdkhuvuc(itemSelected.getKey());
+
+            itemSelected=(ComboboxItem)jComboBoxNhaHang_TaiKhoan.getSelectedItem();
+            nhaHang.setIdtaikhoan(itemSelected.getKey());
+
+            nhaHang.setKhoangtien(jTextFieldNhaHangKhoangTien.getText());
+            nhaHang.setLoaihinh(jTextFieldNhaHangLoaiHinh.getText());
+            nhaHang.setMota(jTextAreaNhaHangMoTa.getText());
+            nhaHang.setSdt(jTextFieldNhaHangSdt.getText());
+            nhaHang.setUudai(jTextFieldNhaHangUuDai.getText());
+
+            JOptionPane.showMessageDialog(null, NhaHangBUS.Them(nhaHang,fileItemToPhp));
+            LoadNhaHang();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Chọn tài khoản cần sửa");
+            JOptionPane.showMessageDialog(null, "Chọn nhà hàng cần sửa");
         }
     }
     
-    private void XoaTaiKhoan(){
+    private void XoaNhaHang(){
         try {
-            int idTaiKhoan = (int) defaultTableTaiKhoan.getValueAt(jTableTaiKhoan.getSelectedRow(), 0);
+            int idNhaHang = Integer.parseInt((String) defaultTableNhaHang.getValueAt(jTableNhaHang.getSelectedRow(), 0));
         
-            JOptionPane.showMessageDialog(null, TaiKhoanBUS.Xoa(idTaiKhoan));
-            LoadTaiKhoan();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Chọn tài khoản cần xóa");
+            JOptionPane.showMessageDialog(null, NhaHangBUS.Xoa(idNhaHang));
+            LoadNhaHang();
+        } catch (NumberFormatException | HeadlessException e) {
+            JOptionPane.showMessageDialog(null, "Chọn nhà hàng cần xóa");
         }
     }
     
     private void LoadComboboxNhaHang_KhuVuc(){
         ArrayList listKhuVucItem = KhuVucBUS.getAll();
-        KhuVucModel thanhPho;
+        KhuVucViewModel khuVuc;
 
         jComboBoxNhaHang_KhuVuc.removeAllItems();
-        ComboboxItem fistComboboxItem = new ComboboxItem(0, "Chọn thành phố");
-        jComboBoxKhuVuc_ThanhPho.addItem(fistComboboxItem);
-        for (int i = 0; i < listThanhPhoItem.size(); i++) {
-            thanhPho = (ThanhPhoModel)listThanhPhoItem.get(i);
+        ComboboxItem fistComboboxItem = new ComboboxItem(0, "Chọn khu vực");
+        jComboBoxNhaHang_KhuVuc.addItem(fistComboboxItem);
+        for (int i = 0; i < listKhuVucItem.size(); i++) {
+            khuVuc = (KhuVucViewModel)listKhuVucItem.get(i);
             
-            jComboBoxKhuVuc_ThanhPho.addItem(new ComboboxItem(thanhPho.getIdthanhpho(), thanhPho.getTenthanhpho()));
+            jComboBoxNhaHang_KhuVuc.addItem(new ComboboxItem(khuVuc.getIdkhuvuc(), khuVuc.getTenkhuvuc()));
+        }
+    }
+    
+    private void LoadComboboxNhaHang_TaiKhoan(){
+        ArrayList listTaiKhoanItem = TaiKhoanBUS.getAll();
+        TaiKhoanModel taiKhoan;
+
+        jComboBoxNhaHang_TaiKhoan.removeAllItems();
+        ComboboxItem fistComboboxItem = new ComboboxItem(0, "Chọn chủ sở hữu");
+        jComboBoxNhaHang_TaiKhoan.addItem(fistComboboxItem);
+        for (int i = 0; i < listTaiKhoanItem.size(); i++) {
+            taiKhoan = (TaiKhoanModel)listTaiKhoanItem.get(i);
+            
+            jComboBoxNhaHang_TaiKhoan.addItem(new ComboboxItem(taiKhoan.getIdtaikhoan(), taiKhoan.getUsername()));
         }
     }
     
@@ -777,6 +860,7 @@ public class FormMain extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTableNhaHang.setRowHeight(50);
         jTableNhaHang.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTableNhaHangChonThanhPho(evt);
@@ -835,9 +919,9 @@ public class FormMain extends javax.swing.JFrame {
             jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelNhaHangLayout.createSequentialGroup()
-                .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanelNhaHangLayout.createSequentialGroup()
-                        .addContainerGap()
+                .addContainerGap()
+                .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelNhaHangLayout.createSequentialGroup()
                         .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(jPanelNhaHangLayout.createSequentialGroup()
                                 .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -879,47 +963,48 @@ public class FormMain extends javax.swing.JFrame {
                                         .addComponent(jLabel19)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanelNhaHangLayout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelNhaHangLayout.createSequentialGroup()
+                                .addGap(17, 17, 17)
                                 .addComponent(jLabel10)
-                                .addGap(27, 27, 27)
-                                .addComponent(jTextFieldNhaHangTen)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextFieldNhaHangTen, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(49, 49, 49)
                         .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelNhaHangLayout.createSequentialGroup()
                                 .addComponent(jLabel21)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonUploadNhaHangHinhAnh))
-                            .addComponent(jLabelNhaHangHinhAnh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanelNhaHangLayout.createSequentialGroup()
-                        .addGap(590, 590, 590)
-                        .addComponent(jTextFieldTimNhaHang, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
-                .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelNhaHangLayout.createSequentialGroup()
-                        .addGap(50, 50, 50)
-                        .addComponent(jButtonXoaNhaHang))
-                    .addGroup(jPanelNhaHangLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabelNhaHangHinhAnh, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                        .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelNhaHangLayout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addComponent(jButtonXoaNhaHang))
+                            .addGroup(jPanelNhaHangLayout.createSequentialGroup()
+                                .addComponent(jButtonThemNhaHang)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButtonSuaNhaHang)))
+                        .addGap(57, 57, 57))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelNhaHangLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jTextFieldTimNhaHang, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jButtonTimNhaHang)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonResetNhaHang))
-                    .addGroup(jPanelNhaHangLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonThemNhaHang)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonSuaNhaHang)))
-                .addGap(27, 27, 27))
+                        .addComponent(jButtonResetNhaHang)
+                        .addContainerGap())))
         );
         jPanelNhaHangLayout.setVerticalGroup(
             jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelNhaHangLayout.createSequentialGroup()
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldTimNhaHang, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonTimNhaHang)
                     .addComponent(jButtonResetNhaHang))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(jTextFieldNhaHangTen, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -955,7 +1040,6 @@ public class FormMain extends javax.swing.JFrame {
                             .addComponent(jTextFieldNhaHangUuDai, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel21)
                             .addComponent(jButtonUploadNhaHangHinhAnh))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanelNhaHangLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelNhaHangLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
@@ -1245,7 +1329,7 @@ public class FormMain extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonXoaTaiKhoanActionPerformed
 
     private void jTableNhaHangChonThanhPho(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableNhaHangChonThanhPho
-        // TODO add your handling code here:
+        ChonNhaHang();
     }//GEN-LAST:event_jTableNhaHangChonThanhPho
 
     private void jButtonUploadNhaHangHinhAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUploadNhaHangHinhAnhActionPerformed

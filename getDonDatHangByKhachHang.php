@@ -1,8 +1,9 @@
 <?php
     require "database.php";
 
+    $isComplete = $_GET["complete"];
     $viewModelJson = $_POST["viewModel"];
-    if(isset($viewModelJson)){
+    if(isset($viewModelJson)&&isset($isComplete)){
         $viewModel = json_decode($viewModelJson);
 
         $query = "  SELECT n.idnhahang,n.tennhahang,n.diachi,d.ngayden,d.gioden,d.soluongnguoilon,d.soluongtreem
@@ -23,8 +24,14 @@
                                 OR n.sdt LIKE '%".$viewModel->searchKey."%'";
         }
 
-        $query=$query.$filter;
+        if($isComplete==0){
+            $filter = $filter." AND d.tongtien = 0";
+        }
+        if($isComplete==1){
+            $filter = $filter." AND d.tongtien > 0";
+        }
 
+        $query=$query.$filter;
         $database = new database();
         $result = $database->fetchsql($query);
 
@@ -32,6 +39,8 @@
     }
 ?>
 
+<!-- truyen ntn: http://localhost/server/getDonDatHangByKhachHang.php?complete=0
+complete=1 la hoan thanh roi, 0 la chua -->
 <!-- method post, pram: 
 viewModel: {
 	"id":"50",

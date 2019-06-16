@@ -26,8 +26,8 @@ import org.json.JSONObject;
  * @author vuanl
  */
 public class NhaHangBUS {
-    private static String message_failed="nhà hàng thất bại";
-    private static String message_success="nhà hàng thành công";
+    private static final String message_failed="nhà hàng thất bại";
+    private static final String message_success="nhà hàng thành công";
     
     public static ArrayList getAll(){
         String nhahangJson = ApiHelper.getData(ApiNhaHang.GetAll);

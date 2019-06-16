@@ -15,15 +15,16 @@ public class NhaHangViewModel {
     private String tennhahang;
     private String diachi;
     private int idkhuvuc;
-    private String tenkhuvuc;
     private int idtaikhoan;
-    private int username;
     private String khoangtien;
     private String loaihinh;
     private String sdt;
     private String uudai;
     private String giodonkhach;
     private String mota;
+    
+    private String tenkhuvuc;
+    private String username;
 
     public NhaHangViewModel() {
     }
@@ -84,11 +85,11 @@ public class NhaHangViewModel {
         this.idtaikhoan = idtaikhoan;
     }
 
-    public int getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    public void setUsername(int username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
