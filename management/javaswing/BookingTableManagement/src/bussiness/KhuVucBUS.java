@@ -71,7 +71,7 @@ public class KhuVucBUS {
         }
         
         @SuppressWarnings("Convert2Diamond")
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", new Gson().toJson(khuVuc));
         
         String response = ApiHelper.postData(ApiKhuVuc.Them, params);
@@ -92,7 +92,7 @@ public class KhuVucBUS {
         }
         
         @SuppressWarnings("Convert2Diamond")
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", new Gson().toJson(khuVuc));
         
         String response = ApiHelper.postData(ApiKhuVuc.Sua, params);

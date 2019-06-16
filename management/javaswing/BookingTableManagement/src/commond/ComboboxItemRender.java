@@ -30,7 +30,9 @@ public class ComboboxItemRender extends BasicComboBoxRenderer {
             if (index == -1)
             {
                 ComboboxItem item = (ComboboxItem)value;
-                setText( "" + item.getValue());
+                if(item!=null){
+                    setText( "" + item.getValue());
+                }
             }
  
  

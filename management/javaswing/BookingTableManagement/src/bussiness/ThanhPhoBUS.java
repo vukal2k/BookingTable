@@ -61,7 +61,7 @@ public final class ThanhPhoBUS{
         }
         
         @SuppressWarnings("Convert2Diamond")
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", new Gson().toJson(thanhPho));
         
         String response = ApiHelper.postData(ApiThanhPho.Them, params);
@@ -79,7 +79,7 @@ public final class ThanhPhoBUS{
         }
         
         @SuppressWarnings("Convert2Diamond")
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", new Gson().toJson(thanhPho));
         
         String response = ApiHelper.postData(ApiThanhPho.Sua, params);

@@ -5,10 +5,13 @@
  */
 package bussiness;
 
+import commond.MultipartUtility;
 import com.google.gson.Gson;
 import commond.ApiHelper;
 import commond.ApiNhaHang;
 import commond.FileItemToPhp;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -64,31 +67,43 @@ public class NhaHangBUS {
     }
     
     public static String Them(NhaHangModel nhaHang, FileItemToPhp fileHinhAnh){
-        if(nhaHang.getTennhahang().trim().equals("")||!ApiHelper.validateSqlInjection(nhaHang.getTennhahang())){
-            return "Yêu cầu nhập tên nhà hàng";
-        }
-        if(nhaHang.getIdnhahang()==0){
-            return "Yêu cầu chọn khu vực";
-        }
-        if(nhaHang.getIdtaikhoan()==0){
-            return "Yêu cầu chọn chủ sở hữu";
-        }
-        if(!(fileHinhAnh.getFileName().contains("jpg")&&fileHinhAnh.getFileName().trim().equals("")==false)){
-            return "File hình ảnh phải là định dạng jpg";
-        }
-        
-        
-        @SuppressWarnings("Convert2Diamond")
-        Map<String, String> params = new LinkedHashMap<String, String>();
-        params.put("viewModel", new Gson().toJson(nhaHang));
-        params.put("file", new Gson().toJson(fileHinhAnh));
-        
-        String response = ApiHelper.postData(ApiNhaHang.Them, params);
-        if(response.contains("success")){
-            return "Thêm "+message_success;
-        }
-        else{
-            return "Thêm "+message_failed;
+        try {
+            if(nhaHang.getTennhahang().trim().equals("")||!ApiHelper.validateSqlInjection(nhaHang.getTennhahang())){
+                return "Yêu cầu nhập tên nhà hàng";
+            }
+            if(nhaHang.getIdkhuvuc()==0){
+                return "Yêu cầu chọn khu vực";
+            }
+            if(nhaHang.getIdtaikhoan()==0){
+                return "Yêu cầu chọn chủ sở hữu";
+            }
+            if(!(fileHinhAnh.getFileName().contains("jpg")&&fileHinhAnh.getFileName().trim().equals("")==false)){
+                return "File hình ảnh phải là định dạng jpg";
+            }
+            
+            //upload file
+            MultipartUtility multipart = new MultipartUtility();
+            String resultUpload =multipart.addFilePart(new File(fileHinhAnh.getFilePath()));
+            
+            if(resultUpload.trim().contains("Success")){
+                @SuppressWarnings("Convert2Diamond")
+                    Map<String, String> params = new LinkedHashMap<>();
+                params.put("viewModel", new Gson().toJson(nhaHang));
+
+
+                String response = ApiHelper.postData(ApiNhaHang.Them, params);
+                if(response.contains("success")){
+                    return "Thêm "+message_success;
+                }
+                else{
+                    return "Thêm "+message_failed;
+                }
+            }
+            else{
+                return "Không thể upload được file ảnh";
+            }
+        } catch (IOException ex) {
+            return "Không thể upload được file ảnh";
         }
     }
     
@@ -107,9 +122,9 @@ public class NhaHangBUS {
         }
         
         @SuppressWarnings("Convert2Diamond")
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", new Gson().toJson(nhaHang));
-        params.put("file", new Gson().toJson(fileHinhAnh));
+        
         
         String response = ApiHelper.postData(ApiNhaHang.Sua, params);
         if(response.contains("success")){

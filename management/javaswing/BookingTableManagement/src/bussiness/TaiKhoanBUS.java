@@ -72,7 +72,7 @@ public class TaiKhoanBUS {
         }
         
         @SuppressWarnings("Convert2Diamond")
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", new Gson().toJson(taiKhoan));
         
         String response = ApiHelper.postData(ApiTaiKhoan.Them, params);
@@ -96,7 +96,7 @@ public class TaiKhoanBUS {
         }
         
         @SuppressWarnings("Convert2Diamond")
-        Map<String, String> params = new LinkedHashMap<String, String>();
+        Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", new Gson().toJson(taiKhoan));
         
         String response = ApiHelper.postData(ApiTaiKhoan.Sua, params);
