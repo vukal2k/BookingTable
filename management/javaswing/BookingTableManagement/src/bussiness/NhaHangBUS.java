@@ -86,6 +86,7 @@ public class NhaHangBUS {
             String resultUpload =multipart.addFilePart(new File(fileHinhAnh.getFilePath()));
             
             if(resultUpload.trim().contains("Success")){
+                nhaHang.setHinhanh("img/"+fileHinhAnh.getFileName());
                 @SuppressWarnings("Convert2Diamond")
                     Map<String, String> params = new LinkedHashMap<>();
                 params.put("viewModel", new Gson().toJson(nhaHang));

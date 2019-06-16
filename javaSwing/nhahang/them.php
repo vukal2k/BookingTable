@@ -6,10 +6,8 @@
     if(isset($nhaHangJson)){
         $nhaHang = json_decode($nhaHangJson,true);
 
-       
-
         $database = new database();
-        $result = $database->insert('khuvuc',$thanhpho);
+        $result = $database->insert('nhahang',$nhaHang);
 
         if($result>0){
             echo "success";

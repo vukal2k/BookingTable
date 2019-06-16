@@ -7,9 +7,12 @@ package commond;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -107,5 +110,13 @@ public class ApiHelper {
             return false;
         else
             return true;
+    }
+    
+    public static boolean checkImageExsists(String urlString) throws MalformedURLException, ProtocolException, IOException{
+        HttpURLConnection.setFollowRedirects(false);
+        HttpURLConnection con =  (HttpURLConnection) new URL(urlString).openConnection();
+        con.setRequestMethod("HEAD");
+        return (con.getResponseCode() == HttpURLConnection.HTTP_OK && 
+                (urlString.contains(".jpg") || urlString.contains(".png")));
     }
 }

@@ -9,6 +9,7 @@ import bussiness.KhuVucBUS;
 import bussiness.NhaHangBUS;
 import bussiness.TaiKhoanBUS;
 import bussiness.ThanhPhoBUS;
+import commond.ApiHelper;
 import commond.ApiUrl;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -328,24 +329,25 @@ public class FormMain extends javax.swing.JFrame {
             
             URL url;
             BufferedImage img;
-            ImageIcon imageIcon;
-            Object objectHinhAnh;
+            @SuppressWarnings("UnusedAssignment")
+            ImageIcon objectHinhAnh=null;
             
             for (int i = 0; i < listNhaHang.size(); i++) {
                 try {
                     nhaHang= (NhaHangViewModel)listNhaHang.get(i);
                     
-                    //url = new URL(nhaHang.getHinhanh());
-                    url=new URL("http://sleeping.somee.com/Asset/img/roi-vi-vua-chuong-1.jpg");
-                    img = ImageIO.read(url);
-                    imageIcon =new ImageIcon(img.getScaledInstance(jLabelNhaHangHinhAnh.getWidth(),
-                            jLabelNhaHangHinhAnh.getHeight(),
-                            Image.SCALE_DEFAULT));
-                    
-                    if(imageIcon==null){
-                        objectHinhAnh="Không có hình ảnh";
+                    if(ApiHelper.checkImageExsists(ApiUrl.HostImage+nhaHang.getHinhanh())==false){
+                        img = ImageIO.read(getClass().getClassLoader().getResource("resources/no_img.png"));
+                        objectHinhAnh =new ImageIcon(img.getScaledInstance(100,
+                                50,
+                                Image.SCALE_DEFAULT));
                     }else{
-                        objectHinhAnh=new ImageIcon(imageIcon.getImage());
+                        url = new URL(ApiUrl.HostImage+nhaHang.getHinhanh());
+                        //url=new URL("http://sleeping.somee.com/Asset/img/roi-vi-vua-chuong-1.jpg");
+                        //url = new URL(ApiUrl.HostImage+"/img/20190609155635_1.jpg");
+                        img = ImageIO.read(url);
+                        objectHinhAnh =new ImageIcon(img.getScaledInstance(100,50,
+                                Image.SCALE_DEFAULT));
                     }
                     defaultTableNhaHang.insertRow(i, new Object[]{
                         nhaHang.getIdnhahang(),objectHinhAnh ,

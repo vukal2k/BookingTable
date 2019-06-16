@@ -11,6 +11,7 @@ package commond;
  */
 public class ApiUrl {
     public static  String  Host = "http://localhost/server/javaswing/";
+    public static  String  HostImage = "http://localhost/server/";
     public static  String  ApiUpLoad = "http://localhost/server/upLoadImage.php";
 }
 
