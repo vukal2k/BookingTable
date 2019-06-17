@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -46,8 +47,9 @@ public class FormMain extends javax.swing.JFrame {
     private final DefaultTableModel defaultTableThanhPho;
     private final DefaultTableModel defaultTableKhuVuc;
     private final DefaultTableModel defaultTableTaiKhoan;
-    private DefaultTableModel defaultTableNhaHang;
+    private final DefaultTableModel defaultTableNhaHang;
     private FileItemToPhp fileItemToPhp;
+    private List<FileItemToPhp> listOfFileItemFromPhp= new ArrayList<>();
     // </editor-fold>
     
     public FormMain() {
@@ -326,6 +328,7 @@ public class FormMain extends javax.swing.JFrame {
             ArrayList listNhaHang = NhaHangBUS.getAll();
             NhaHangViewModel nhaHang;
             defaultTableNhaHang.setRowCount(0);
+            listOfFileItemFromPhp.clear();
             
             URL url;
             BufferedImage img;
@@ -341,6 +344,7 @@ public class FormMain extends javax.swing.JFrame {
                         objectHinhAnh =new ImageIcon(img.getScaledInstance(100,
                                 50,
                                 Image.SCALE_DEFAULT));
+                        listOfFileItemFromPhp.add(new FileItemToPhp("", ""));
                     }else{
                         url = new URL(ApiUrl.HostImage+nhaHang.getHinhanh());
                         //url=new URL("http://sleeping.somee.com/Asset/img/roi-vi-vua-chuong-1.jpg");
@@ -348,6 +352,7 @@ public class FormMain extends javax.swing.JFrame {
                         img = ImageIO.read(url);
                         objectHinhAnh =new ImageIcon(img.getScaledInstance(100,50,
                                 Image.SCALE_DEFAULT));
+                        listOfFileItemFromPhp.add(new FileItemToPhp("", ApiUrl.HostImage+nhaHang.getHinhanh()));
                     }
                     defaultTableNhaHang.insertRow(i, new Object[]{
                         nhaHang.getIdnhahang(),objectHinhAnh ,
@@ -386,14 +391,41 @@ public class FormMain extends javax.swing.JFrame {
     
     private void ChonNhaHang(){
         int selectedRowIndex=jTableNhaHang.getSelectedRow();
+        
         jTextFieldNhaHangTen.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 2).toString());
         //ImageIcon imageHinhAnh = (ImageIcon)defaultTableNhaHang.getValueAt(selectedRowIndex, 1);
-        ImageIcon image = (ImageIcon)defaultTableNhaHang.getValueAt(selectedRowIndex, 1);
-        ImageIcon imageHinhAnh = new ImageIcon(image.getImage().getScaledInstance(jLabelNhaHangHinhAnh.getWidth(), 
+        
+        //set hinh anh
+        URL url;
+        BufferedImage img;
+        @SuppressWarnings("UnusedAssignment")
+        ImageIcon objectHinhAnh=null;
+        FileItemToPhp fileFromPhp = listOfFileItemFromPhp.get(selectedRowIndex);
+        try {
+            if(fileFromPhp.getFilePath().equals("")==false){
+                img = ImageIO.read(getClass().getClassLoader().getResource("resources/no_img.png"));
+                objectHinhAnh =new ImageIcon(img.getScaledInstance(100,
+                                50,
+                                Image.SCALE_DEFAULT));
+            }else{
+                url = new URL(fileFromPhp.getFilePath());
+                //url=new URL("http://sleeping.somee.com/Asset/img/roi-vi-vua-chuong-1.jpg");
+                //url = new URL(ApiUrl.HostImage+"/img/20190609155635_1.jpg");
+                img = ImageIO.read(url);
+                objectHinhAnh =new ImageIcon(img.getScaledInstance(100,50,
+                                Image.SCALE_DEFAULT));
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        ImageIcon imageHinhAnh = new ImageIcon(objectHinhAnh.getImage().getScaledInstance(jLabelNhaHangHinhAnh.getWidth(), 
                                                                                   jLabelNhaHangHinhAnh.getHeight(), 
                                                                                   Image.SCALE_DEFAULT));
         jLabelNhaHangHinhAnh.setIcon(imageHinhAnh);
-        fileItemToPhp= null;
+        
+        //set dia ch
         jTextFieldNhaHangDiaChi.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 3).toString());
         String selectedKhuVuc = defaultTableNhaHang.getValueAt(selectedRowIndex, 4).toString();
         ComboboxItem item;

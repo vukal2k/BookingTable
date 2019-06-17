@@ -6,26 +6,23 @@
 package commond;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  *
  * @author vuanl
  */
 public class ApiHelper {
-    private ApiHelper instance = new ApiHelper();
+    private final ApiHelper instance = new ApiHelper();
     public ApiHelper(){
         
     }
@@ -56,7 +53,7 @@ public class ApiHelper {
             }
 
             return response.toString();
-        } catch (Exception e) {
+        } catch (URISyntaxException | IOException e) {
             return "Err:" + e.toString();
         }
     }
@@ -100,16 +97,13 @@ public class ApiHelper {
             }
             return response.toString();
  
-        } catch (Exception e) {
+        } catch (URISyntaxException | IOException e) {
             return "Err:" + e.toString();
         }
     }
     
     public static boolean validateSqlInjection(String value){
-        if(value.contains("--"))
-            return false;
-        else
-            return true;
+        return !value.contains("--");
     }
     
     public static boolean checkImageExsists(String urlString) throws MalformedURLException, ProtocolException, IOException{
