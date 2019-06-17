@@ -373,57 +373,81 @@ public class FormMain extends javax.swing.JFrame {
     private void TimNhaHang(){
         ArrayList listNhaHang = NhaHangBUS.timKiem(jTextFieldTimNhaHang.getText());
         NhaHangViewModel nhaHang;
-        defaultTableNhaHang.setRowCount(0);
-        
-        for (int i = 0; i < listNhaHang.size(); i++) {
-            nhaHang= (NhaHangViewModel)listNhaHang.get(i);
+            defaultTableNhaHang.setRowCount(0);
+            listOfFileItemFromPhp.clear();
             
-            defaultTableNhaHang.insertRow(i, new Object[]{
-                nhaHang.getIdnhahang(), new ImageIcon(ApiUrl.Host+nhaHang.getHinhanh()),
-                nhaHang.getTennhahang(),nhaHang.getDiachi(),
-                nhaHang.getDiachi(),nhaHang.getTenkhuvuc(),
-                nhaHang.getUsername(),nhaHang.getKhoangtien(),
-                nhaHang.getLoaihinh(),nhaHang.getSdt(),
-                nhaHang.getUudai(),nhaHang.getGiodonkhach(), nhaHang.getMota()
-            });
-        }
+            URL url;
+            BufferedImage img;
+            @SuppressWarnings("UnusedAssignment")
+            ImageIcon objectHinhAnh=null;
+            
+            for (int i = 0; i < listNhaHang.size(); i++) {
+                try {
+                    nhaHang= (NhaHangViewModel)listNhaHang.get(i);
+                    
+                    if(ApiHelper.checkImageExsists(ApiUrl.HostImage+nhaHang.getHinhanh())==false){
+                        img = ImageIO.read(getClass().getClassLoader().getResource("resources/no_img.png"));
+                        objectHinhAnh =new ImageIcon(img.getScaledInstance(100,
+                                50,
+                                Image.SCALE_DEFAULT));
+                        listOfFileItemFromPhp.add(new FileItemToPhp("", ""));
+                    }else{
+                        url = new URL(ApiUrl.HostImage+nhaHang.getHinhanh());
+                        //url=new URL("http://sleeping.somee.com/Asset/img/roi-vi-vua-chuong-1.jpg");
+                        //url = new URL(ApiUrl.HostImage+"/img/20190609155635_1.jpg");
+                        img = ImageIO.read(url);
+                        objectHinhAnh =new ImageIcon(img.getScaledInstance(100,50,
+                                Image.SCALE_DEFAULT));
+                        listOfFileItemFromPhp.add(new FileItemToPhp("", ApiUrl.HostImage+nhaHang.getHinhanh()));
+                    }
+                    defaultTableNhaHang.insertRow(i, new Object[]{
+                        nhaHang.getIdnhahang(),objectHinhAnh ,
+                        nhaHang.getTennhahang(),nhaHang.getDiachi(),
+                        nhaHang.getTenkhuvuc(),nhaHang.getUsername(),
+                        nhaHang.getKhoangtien(),nhaHang.getLoaihinh(),
+                        nhaHang.getSdt(),nhaHang.getUudai(),
+                        nhaHang.getGiodonkhach(), nhaHang.getMota()
+                    });
+                } catch (MalformedURLException ex) {
+                    Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
     }
     
     private void ChonNhaHang(){
         int selectedRowIndex=jTableNhaHang.getSelectedRow();
         
         jTextFieldNhaHangTen.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 2).toString());
-        //ImageIcon imageHinhAnh = (ImageIcon)defaultTableNhaHang.getValueAt(selectedRowIndex, 1);
         
         //set hinh anh
+        fileItemToPhp=null; //set curent file to php í null if update do not change hinh anh
+        
         URL url;
         BufferedImage img;
         @SuppressWarnings("UnusedAssignment")
         ImageIcon objectHinhAnh=null;
         FileItemToPhp fileFromPhp = listOfFileItemFromPhp.get(selectedRowIndex);
         try {
-            if(fileFromPhp.getFilePath().equals("")==false){
+            if(fileFromPhp.getFilePath().equals("")==true){
                 img = ImageIO.read(getClass().getClassLoader().getResource("resources/no_img.png"));
-                objectHinhAnh =new ImageIcon(img.getScaledInstance(100,
-                                50,
-                                Image.SCALE_DEFAULT));
+                objectHinhAnh =new ImageIcon(img.getScaledInstance(jLabelNhaHangHinhAnh.getWidth(), 
+                                                                   jLabelNhaHangHinhAnh.getHeight(), 
+                                                                    Image.SCALE_DEFAULT));
             }else{
                 url = new URL(fileFromPhp.getFilePath());
-                //url=new URL("http://sleeping.somee.com/Asset/img/roi-vi-vua-chuong-1.jpg");
-                //url = new URL(ApiUrl.HostImage+"/img/20190609155635_1.jpg");
                 img = ImageIO.read(url);
-                objectHinhAnh =new ImageIcon(img.getScaledInstance(100,50,
-                                Image.SCALE_DEFAULT));
+                objectHinhAnh =new ImageIcon(img.getScaledInstance(jLabelNhaHangHinhAnh.getWidth(), 
+                                                                    jLabelNhaHangHinhAnh.getHeight(), 
+                                                                    Image.SCALE_DEFAULT));
             }
         } catch (MalformedURLException ex) {
             Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-        ImageIcon imageHinhAnh = new ImageIcon(objectHinhAnh.getImage().getScaledInstance(jLabelNhaHangHinhAnh.getWidth(), 
-                                                                                  jLabelNhaHangHinhAnh.getHeight(), 
-                                                                                  Image.SCALE_DEFAULT));
-        jLabelNhaHangHinhAnh.setIcon(imageHinhAnh);
+        jLabelNhaHangHinhAnh.setIcon(objectHinhAnh);
         
         //set dia ch
         jTextFieldNhaHangDiaChi.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 3).toString());
@@ -481,7 +505,7 @@ public class FormMain extends javax.swing.JFrame {
     private void SuaNhaHang(){
         try {
             NhaHangModel nhaHang = new NhaHangModel();
-            nhaHang.setIdnhahang(Integer.parseInt((String) defaultTableNhaHang.getValueAt(jTableNhaHang.getSelectedRow(), 0)));
+            nhaHang.setIdnhahang((int) defaultTableNhaHang.getValueAt(jTableNhaHang.getSelectedRow(), 0));
             nhaHang.setTennhahang(jTextFieldNhaHangTen.getText());
             nhaHang.setDiachi(jTextFieldNhaHangDiaChi.getText());
             nhaHang.setGiodonkhach(jTextFieldNhaHangGioDonKhach.getText());
@@ -497,17 +521,24 @@ public class FormMain extends javax.swing.JFrame {
             nhaHang.setMota(jTextAreaNhaHangMoTa.getText());
             nhaHang.setSdt(jTextFieldNhaHangSdt.getText());
             nhaHang.setUudai(jTextFieldNhaHangUuDai.getText());
+            
+            //set hinh anh nhu cu
+            //xoa localhost trong list hinh anh
+            String oldHinhAnhUrlInDb=listOfFileItemFromPhp.get(jTableNhaHang.getSelectedRow()).getFilePath().replaceAll(ApiUrl.HostImage, "");
+            nhaHang.setHinhanh(oldHinhAnhUrlInDb); 
 
-            JOptionPane.showMessageDialog(null, NhaHangBUS.Them(nhaHang,fileItemToPhp));
+            JOptionPane.showMessageDialog(null, NhaHangBUS.Sua(nhaHang,fileItemToPhp));
             LoadNhaHang();
-        } catch (Exception e) {
+        } catch (NumberFormatException | HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Chọn nhà hàng cần sửa");
+        } catch (IOException ex) {
+            Logger.getLogger(FormMain.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     private void XoaNhaHang(){
         try {
-            int idNhaHang = Integer.parseInt((String) defaultTableNhaHang.getValueAt(jTableNhaHang.getSelectedRow(), 0));
+            int idNhaHang = (int) defaultTableNhaHang.getValueAt(jTableNhaHang.getSelectedRow(), 0);
         
             JOptionPane.showMessageDialog(null, NhaHangBUS.Xoa(idNhaHang));
             LoadNhaHang();
@@ -709,7 +740,7 @@ public class FormMain extends javax.swing.JFrame {
             }
         });
 
-        jButtonResetThanhPho.setText("Reset");
+        jButtonResetThanhPho.setText("Refresh");
         jButtonResetThanhPho.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonResetThanhPhoActionPerformed(evt);
@@ -799,7 +830,7 @@ public class FormMain extends javax.swing.JFrame {
             }
         });
 
-        jButtonResetKhuVuc.setText("Reset");
+        jButtonResetKhuVuc.setText("Refresh");
         jButtonResetKhuVuc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonResetKhuVucActionPerformed(evt);
@@ -913,8 +944,18 @@ public class FormMain extends javax.swing.JFrame {
         jScrollPane4.setViewportView(jTableNhaHang);
 
         jButtonTimNhaHang.setText("Tìm Kiếm");
+        jButtonTimNhaHang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonTimNhaHangActionPerformed(evt);
+            }
+        });
 
         jButtonResetNhaHang.setText("Refresh");
+        jButtonResetNhaHang.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonResetNhaHangActionPerformed(evt);
+            }
+        });
 
         jLabel10.setText("Tên Nhà Hàng");
 
@@ -1235,7 +1276,7 @@ public class FormMain extends javax.swing.JFrame {
             }
         });
 
-        jButtonResetTaiKhoan.setText("Reset");
+        jButtonResetTaiKhoan.setText("Refresh");
         jButtonResetTaiKhoan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonResetTaiKhoanActionPerformed(evt);
@@ -1480,6 +1521,14 @@ public class FormMain extends javax.swing.JFrame {
     private void jButtonXoaNhaHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonXoaNhaHangActionPerformed
         XoaNhaHang();
     }//GEN-LAST:event_jButtonXoaNhaHangActionPerformed
+
+    private void jButtonTimNhaHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTimNhaHangActionPerformed
+        TimNhaHang();
+    }//GEN-LAST:event_jButtonTimNhaHangActionPerformed
+
+    private void jButtonResetNhaHangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetNhaHangActionPerformed
+        LoadNhaHang();
+    }//GEN-LAST:event_jButtonResetNhaHangActionPerformed
 
     /**
      * @param args the command line arguments

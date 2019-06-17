@@ -1,15 +1,23 @@
 <?php
     require "../../database.php";
 
-    $khuVucJson = $_POST["viewModel"];
-    if(isset($khuVucJson)){
-        $khuVuc = json_decode($khuVucJson);
+    $nhaHangJson = $_POST["viewModel"];
+    if(isset($nhaHangJson)){
+        $nhaHang = json_decode($nhaHangJson);
 
-        $query = "UPDATE khuvuc SET tenkhuvuc = '".$khuVuc->tenkhuvuc."' , 
-                                    idthanhpho = ".$khuVuc->idthanhpho."
-                     WHERE idkhuvuc = ".$khuVuc->idkhuvuc;
+        $query = "UPDATE `nhahang` SET  `idtaikhoan`=".$nhaHang->idtaikhoan.",
+                                        `tennhahang`='".$nhaHang->tennhahang."',
+                                        `diachi`='".$nhaHang->diachi."',
+                                        `sdt`='".$nhaHang->sdt."',
+                                        `mota`='".$nhaHang->mota."',
+                                        `uudai`='".$nhaHang->uudai."',
+                                        `loaihinh`='".$nhaHang->loaihinh."',
+                                        `idkhuvuc`='".$nhaHang->idkhuvuc."',
+                                        `khoangtien`='".$nhaHang->khoangtien."',
+                                        `giodonkhach`='".$nhaHang->giodonkhach."',
+                                        `hinhanh`='".$nhaHang->hinhanh."' 
+                                        WHERE `idnhahang`=".$nhaHang->idnhahang;
 
-       
         //echo $query; die();            
         $database = new database();
         $result = $database->update($query);

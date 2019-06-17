@@ -108,7 +108,8 @@ public class NhaHangBUS {
         }
     }
     
-    public static String Sua(NhaHangModel nhaHang, FileItemToPhp fileHinhAnh){
+    @SuppressWarnings("null")
+    public static String Sua(NhaHangModel nhaHang, FileItemToPhp fileHinhAnh) throws IOException{
         if(nhaHang.getTennhahang().trim().equals("")||!ApiHelper.validateSqlInjection(nhaHang.getTennhahang())){
             return "Yêu cầu nhập tên nhà hàng";
         }
@@ -118,21 +119,31 @@ public class NhaHangBUS {
         if(nhaHang.getIdtaikhoan()==0){
             return "Yêu cầu chọn chủ sở hữu";
         }
-        if(!(fileHinhAnh.getFileName().contains("jpg")&&fileHinhAnh.getFileName().trim().equals("")==false)){
-            return "File hình ảnh phải là định dạng jpg";
+        if(fileHinhAnh!=null){
+            if (!(fileHinhAnh.getFileName().contains("jpg") && fileHinhAnh.getFileName().trim().equals("") == false)) {
+                return "File hình ảnh phải là định dạng jpg";
+            }
+            //upload file
+            MultipartUtility multipart = new MultipartUtility();
+            String resultUpload =multipart.addFilePart(new File(fileHinhAnh.getFilePath()));
+            
+            if(resultUpload.trim().contains("Success")){
+                nhaHang.setHinhanh("img/"+fileHinhAnh.getFileName());
+                
+            }
+            else{
+                return "Không thể upload được file ảnh";
+            }
         }
-        
         @SuppressWarnings("Convert2Diamond")
         Map<String, String> params = new LinkedHashMap<>();
         params.put("viewModel", new Gson().toJson(nhaHang));
-        
-        
+
         String response = ApiHelper.postData(ApiNhaHang.Sua, params);
-        if(response.contains("success")){
-            return "Sửa "+message_success;
-        }
-        else{
-            return "Sửa "+message_failed;
+        if (response.contains("success")) {
+            return "Sửa " + message_success;
+        } else {
+            return "Sửa " + message_failed;
         }
     }
     
