@@ -480,6 +480,18 @@ public class FormMain extends javax.swing.JFrame {
         jTextAreaNhaHangMoTa.setText(defaultTableNhaHang.getValueAt(selectedRowIndex, 11).toString());
     }
     
+    private void ShowNhaHangDetail(){
+        NhaHangModel nhaHang = new NhaHangModel();
+        int currentRow = jTableNhaHang.getSelectedRow();
+        
+        nhaHang.setIdnhahang((int) defaultTableNhaHang.getValueAt(currentRow, 0));
+        nhaHang.setTennhahang(defaultTableNhaHang.getValueAt(currentRow, 2).toString());
+        
+        FormNhaHangDetail detail = new FormNhaHangDetail(nhaHang,this);
+        detail.setVisible(true);
+        this.setVisible(false);
+    }
+    
     private void ThemNhaHang(){
         NhaHangModel nhaHang = new NhaHangModel();
         nhaHang.setTennhahang(jTextFieldNhaHangTen.getText());
@@ -1504,6 +1516,9 @@ public class FormMain extends javax.swing.JFrame {
 
     private void jTableNhaHangChonThanhPho(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableNhaHangChonThanhPho
         ChonNhaHang();
+        if(evt.getClickCount()==2){
+            ShowNhaHangDetail();
+        }
     }//GEN-LAST:event_jTableNhaHangChonThanhPho
 
     private void jButtonUploadNhaHangHinhAnhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUploadNhaHangHinhAnhActionPerformed

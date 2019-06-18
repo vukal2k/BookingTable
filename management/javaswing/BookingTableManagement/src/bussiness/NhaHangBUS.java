@@ -77,8 +77,9 @@ public class NhaHangBUS {
             if(nhaHang.getIdtaikhoan()==0){
                 return "Yêu cầu chọn chủ sở hữu";
             }
-            if(!(fileHinhAnh.getFileName().contains("jpg")&&fileHinhAnh.getFileName().trim().equals("")==false)){
-                return "File hình ảnh phải là định dạng jpg";
+            if(!((fileHinhAnh.getFileName().contains("png")||fileHinhAnh.getFileName().contains("jpg"))
+                &&fileHinhAnh.getFileName().trim().equals("")==false)){
+                return "File hình ảnh phải là định dạng jpg hoặc png";
             }
             
             //upload file
