@@ -25,8 +25,8 @@ import org.json.JSONObject;
  * @author vuanl
  */
 public class KhuVucBUS {
-    private static String message_failed="khu vực thất bại";
-    private static String message_success="khu vực thành công";
+    private static final String message_failed="khu vực thất bại";
+    private static final String message_success="khu vực thành công";
     
     public static ArrayList getAll(){
         String khuVucJson = ApiHelper.getData(ApiKhuVuc.GetAll);

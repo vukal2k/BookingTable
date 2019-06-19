@@ -5,10 +5,16 @@
  */
 package UI;
 
+import bussiness.DatBanBUS;
+import bussiness.KhuVucBUS;
 import bussiness.MenuBUS;
-import bussiness.NhaHangBUS;
+import bussiness.TaiKhoanBUS;
+import bussiness.ThanhPhoBUS;
 import commond.ApiHelper;
 import commond.ApiUrl;
+import commond.ComboboxItem;
+import commond.ComboboxItemRender;
+import commond.ConvertHelper;
 import commond.FileItemToPhp;
 import commond.ImageRenderer;
 import java.awt.Image;
@@ -17,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -26,9 +33,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import model.DatBanModel;
+import model.DatBanViewModel;
+import model.KhuVucModel;
+import model.KhuVucViewModel;
 import model.MenuModel;
 import model.MenuViewModel;
 import model.NhaHangModel;
+import model.TaiKhoanModel;
+import model.ThanhPhoModel;
 
 /**
  *
@@ -42,6 +55,7 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
     @SuppressWarnings("FieldMayBeFinal")
     private List<FileItemToPhp> listOfFileItemFromPhp= new ArrayList<>();
     private final DefaultTableModel defaultTableMenu;
+    private final DefaultTableModel defaultTableDatBan;
     private final FormMain _formMail;
     
     // </editor-fold>  
@@ -51,8 +65,10 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
         
         
         defaultTableMenu=(DefaultTableModel)jTableMenu.getModel();
+        defaultTableDatBan=(DefaultTableModel)jTableDatBan.getModel();
         jTableMenu.getColumnModel().getColumn(1).setCellRenderer(new ImageRenderer());
         jLabelNhaHangTen.setText(nhaHangViewModel.getTennhahang());
+        jComboBoxDatBan_KhachHang.setRenderer( new ComboboxItemRender() );
         
         
         _nhaHangViewModel=nhaHangViewModel;
@@ -61,6 +77,7 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
         fileItemToPhp=null;
         
         LoadMenu();
+        LoadDatBan();
     }
     
     private void BackToMain(){
@@ -173,6 +190,168 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
     }
     // </editor-fold>   
     
+    // <editor-fold defaultstate="collapsed" desc="Don dat ban">
+    private void LoadDatBan(){
+        ArrayList listDatBan = DatBanBUS.getAll(_nhaHangViewModel.getIdnhahang());
+        DatBanViewModel datban;
+        defaultTableDatBan.setRowCount(0);
+        
+        for (int i = 0; i < listDatBan.size(); i++) {
+            try {
+                datban= (DatBanViewModel)listDatBan.get(i);
+                
+                defaultTableDatBan.insertRow(i, new Object[]{
+                    datban.getIddatban(),datban.getUsername(),ConvertHelper.DateToVNString(datban.getNgayden()),
+                    datban.getGioden(),datban.getSoluongnguoilon(),
+                    datban.getSoluongtreem(),datban.getGhichu(),
+                    datban.getTongtien()
+                });
+            } catch (ParseException ex) {
+                Logger.getLogger(FormNhaHangDetail.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        LoadComboboxDatBan_KhachHang();
+    }
+    
+    private void TimDatBan(){
+        ArrayList listDatBan = DatBanBUS.timKiem(_nhaHangViewModel.getIdnhahang(),jTextFieldTimDonDatBan.getText());
+        DatBanViewModel datban;
+        defaultTableDatBan.setRowCount(0);
+        
+        for (int i = 0; i < listDatBan.size(); i++) {
+            try {
+                datban= (DatBanViewModel)listDatBan.get(i);
+                
+                defaultTableDatBan.insertRow(i, new Object[]{
+                    datban.getIddatban(),datban.getUsername(),ConvertHelper.DateToVNString(datban.getNgayden()),
+                    datban.getGioden(),datban.getSoluongnguoilon(),
+                    datban.getSoluongtreem(),datban.getGhichu(),
+                    datban.getTongtien()
+                });
+            } catch (ParseException ex) {
+                Logger.getLogger(FormNhaHangDetail.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    private void ChonDatBan(){
+        int selectedRowIndex = jTableDatBan.getSelectedRow();
+        
+        //set ngay den
+        String[] selectedNgayDen = defaultTableDatBan.getValueAt(selectedRowIndex, 2).toString().split("/");
+        jSpinnerDatBanNgayDen_Ngay.setValue(Integer.parseInt(selectedNgayDen[0]));
+        jSpinnerDatBanNgayDen_Thang.setValue(Integer.parseInt(selectedNgayDen[1]));
+        jSpinnerDatBanNgayDen_Nam.setValue(Integer.parseInt(selectedNgayDen[2]));
+        
+        //set gio den
+        String[] selectedGioDen = defaultTableDatBan.getValueAt(selectedRowIndex, 3).toString().split(":");
+        jSpinnerDatBanGioDen_Gio.setValue(Integer.parseInt(selectedGioDen[0]));
+        jSpinnerDatBanGioDen_Phut.setValue(Integer.parseInt(selectedGioDen[1]));
+        
+        jSpinnerDatBan_SLNguoiLon.setValue(Integer.parseInt(defaultTableDatBan.getValueAt(selectedRowIndex, 4).toString()));
+        jSpinnerDatBan_SLTreEm.setValue(Integer.parseInt(defaultTableDatBan.getValueAt(selectedRowIndex, 5).toString()));
+        
+        jTextAreaDatBan_GhiChu.setText((String) defaultTableDatBan.getValueAt(selectedRowIndex, 6));
+        
+        jLabelDonDatBan_TongTien.setText((String) defaultTableDatBan.getValueAt(selectedRowIndex, 7));
+        
+        String selectedUsername = defaultTableDatBan.getValueAt(selectedRowIndex, 1).toString();
+        ComboboxItem item;
+        for (int i = 0; i < jComboBoxDatBan_KhachHang.getItemCount(); i++)
+        {
+            item = (ComboboxItem)jComboBoxDatBan_KhachHang.getItemAt(i);
+            if (item.getValue().equalsIgnoreCase(selectedUsername))
+            {
+                jComboBoxDatBan_KhachHang.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+    
+    private void ThemDatBan(){
+        DatBanModel datban = new DatBanModel();
+        datban.setGhichu(jTextAreaDatBan_GhiChu.getText());
+        
+        String gioDen = jSpinnerDatBanGioDen_Gio.getValue()+":"+jSpinnerDatBanGioDen_Phut;
+        datban.setGioden(gioDen);
+        
+        String ngayDen = jSpinnerDatBanNgayDen_Nam.getValue()+"-"+jSpinnerDatBanNgayDen_Thang+"-"+jSpinnerDatBanNgayDen_Ngay.getValue();
+        datban.setNgayden(ngayDen);
+        
+        datban.setIdnhahang(_nhaHangViewModel.getIdnhahang());
+        
+        ComboboxItem selectedUsernameKhach = (ComboboxItem)jComboBoxDatBan_KhachHang.getSelectedItem();
+        datban.setIdtaikhoan(selectedUsernameKhach.getKey());
+        
+        datban.setSoluongnguoilon((int) jSpinnerDatBan_SLNguoiLon.getValue());
+        
+        datban.setSoluongtreem((int) jSpinnerDatBan_SLTreEm.getValue());
+        
+        datban.setTongtien(0+"");
+        
+        JOptionPane.showMessageDialog(null, DatBanBUS.Them(datban));
+        LoadDatBan();
+    }
+    
+    private void SuaDatBan(){
+        try {
+            DatBanModel datban = new DatBanModel();
+            datban.setGhichu(jTextAreaDatBan_GhiChu.getText());
+
+            String gioDen = jSpinnerDatBanGioDen_Gio.getValue()+":"+jSpinnerDatBanGioDen_Phut;
+            datban.setGioden(gioDen);
+
+            String ngayDen = jSpinnerDatBanNgayDen_Nam.getValue()+"-"+jSpinnerDatBanNgayDen_Thang+"-"+jSpinnerDatBanNgayDen_Ngay.getValue();
+            datban.setNgayden(ngayDen);
+
+            datban.setIdnhahang(_nhaHangViewModel.getIdnhahang());
+
+            ComboboxItem selectedUsernameKhach = (ComboboxItem)jComboBoxDatBan_KhachHang.getSelectedItem();
+            datban.setIdtaikhoan(selectedUsernameKhach.getKey());
+
+            datban.setSoluongnguoilon((int) jSpinnerDatBan_SLNguoiLon.getValue());
+
+            datban.setSoluongtreem((int) jSpinnerDatBan_SLTreEm.getValue());
+
+            datban.setTongtien(jLabelDonDatBan_TongTien.getText());
+            
+            datban.setIddatban((int) defaultTableDatBan.getValueAt(jTableDatBan.getSelectedRow(), 0));
+
+            JOptionPane.showMessageDialog(null, DatBanBUS.Sua(datban));
+            
+            LoadDatBan();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Chọn đơn đặt bàn cần sửa");
+        }
+    }
+    
+    private void XoaDatBan(){
+        try {
+            int idDatBan = (int) defaultTableDatBan.getValueAt(jTableDatBan.getSelectedRow(), 0);
+        
+            JOptionPane.showMessageDialog(null, DatBanBUS.Xoa(idDatBan));
+            
+            LoadDatBan();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Chọn khu vực cần xóa");
+        }
+    }
+    
+    private void LoadComboboxDatBan_KhachHang(){
+        ArrayList listKhachHangItem = TaiKhoanBUS.getAll();
+        TaiKhoanModel taiKhoan;
+      
+        jComboBoxDatBan_KhachHang.removeAllItems();
+        ComboboxItem fistComboboxItem = new ComboboxItem(0, "Chọn khách hàng");
+        jComboBoxDatBan_KhachHang.addItem(fistComboboxItem);
+          for (int i = 0; i < listKhachHangItem.size(); i++) {
+              taiKhoan = (TaiKhoanModel)listKhachHangItem.get(i);
+
+              jComboBoxDatBan_KhachHang.addItem(new ComboboxItem(taiKhoan.getIdtaikhoan(), taiKhoan.getUsername()));
+          }
+    }
+    // </editor-fold>
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -188,17 +367,34 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
         jTableMenu = new javax.swing.JTable();
         jPanelDonDatBan = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTableKhuVuc = new javax.swing.JTable();
-        jTextFieldTimKhuVuc = new javax.swing.JTextField();
-        jToggleButtonTimKhuVuc = new javax.swing.JToggleButton();
-        jButtonResetKhuVuc = new javax.swing.JButton();
-        jTextFieldKhuVucTen = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jButtonThemKhuVuc = new javax.swing.JButton();
-        jButtonSuaKhuVuc = new javax.swing.JButton();
-        jButtonXoaKhuVuc = new javax.swing.JButton();
-        jComboBoxKhuVuc_ThanhPho = new javax.swing.JComboBox();
+        jTableDatBan = new javax.swing.JTable();
+        jTextFieldTimDonDatBan = new javax.swing.JTextField();
+        jToggleButtonTimDonDatBan = new javax.swing.JToggleButton();
+        jButtonResetDonDatBan = new javax.swing.JButton();
+        jButtonThemDatBan = new javax.swing.JButton();
+        jButtonSuaDatBan = new javax.swing.JButton();
+        jButtonXoaDatBan = new javax.swing.JButton();
+        jComboBoxDatBan_KhachHang = new javax.swing.JComboBox();
         jLabel4 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jSpinnerDatBanNgayDen_Ngay = new javax.swing.JSpinner();
+        jSpinnerDatBanNgayDen_Thang = new javax.swing.JSpinner();
+        jSpinnerDatBanNgayDen_Nam = new javax.swing.JSpinner();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jSpinnerDatBanGioDen_Gio = new javax.swing.JSpinner();
+        jLabel14 = new javax.swing.JLabel();
+        jSpinnerDatBanGioDen_Phut = new javax.swing.JSpinner();
+        jLabel15 = new javax.swing.JLabel();
+        jSpinnerDatBan_SLNguoiLon = new javax.swing.JSpinner();
+        jLabel16 = new javax.swing.JLabel();
+        jSpinnerDatBan_SLTreEm = new javax.swing.JSpinner();
+        jLabel17 = new javax.swing.JLabel();
+        jLabelDonDatBan_TongTien = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jTextAreaDatBan_GhiChu = new javax.swing.JTextArea();
         jPanelComment = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTableTaiKhoan = new javax.swing.JTable();
@@ -283,7 +479,7 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
             jPanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMenuLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 826, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 892, Short.MAX_VALUE)
                 .addGroup(jPanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanelMenuLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -316,127 +512,234 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
                         .addGroup(jPanelMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton2)
                             .addComponent(jButton3))
-                        .addGap(0, 164, Short.MAX_VALUE))
+                        .addGap(0, 199, Short.MAX_VALUE))
                     .addComponent(jScrollPane1))
                 .addContainerGap())
         );
 
         tabMain.addTab("Menu", jPanelMenu);
 
-        jTableKhuVuc.setModel(new javax.swing.table.DefaultTableModel(
+        jTableDatBan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Id", "Tên Khu Vực", "Tên Thành Phố"
+                "Id", "Username Khách Hàng", "Ngày Đến", "Giờ Đến", "SL Người Lớn", "SL Trẻ Em", "Ghi Chú", "Tổng Tiền"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jTableKhuVuc.addMouseListener(new java.awt.event.MouseAdapter() {
+        jTableDatBan.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTableKhuVucChonThanhPho(evt);
+                jTableDatBanChonThanhPho(evt);
             }
         });
-        jScrollPane2.setViewportView(jTableKhuVuc);
+        jScrollPane2.setViewportView(jTableDatBan);
+        if (jTableDatBan.getColumnModel().getColumnCount() > 0) {
+            jTableDatBan.getColumnModel().getColumn(0).setMaxWidth(40);
+        }
 
-        jToggleButtonTimKhuVuc.setText("Tìm Kiếm");
-        jToggleButtonTimKhuVuc.addActionListener(new java.awt.event.ActionListener() {
+        jToggleButtonTimDonDatBan.setText("Tìm Kiếm");
+        jToggleButtonTimDonDatBan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButtonTimKhuVucActionPerformed(evt);
+                jToggleButtonTimDonDatBanActionPerformed(evt);
             }
         });
 
-        jButtonResetKhuVuc.setText("Refresh");
-        jButtonResetKhuVuc.addActionListener(new java.awt.event.ActionListener() {
+        jButtonResetDonDatBan.setText("Refresh");
+        jButtonResetDonDatBan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonResetKhuVucActionPerformed(evt);
+                jButtonResetDonDatBanActionPerformed(evt);
             }
         });
 
-        jLabel3.setText("Tên Khu Vực");
-
-        jButtonThemKhuVuc.setText("Thêm");
-        jButtonThemKhuVuc.addActionListener(new java.awt.event.ActionListener() {
+        jButtonThemDatBan.setText("Thêm");
+        jButtonThemDatBan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonThemKhuVucActionPerformed(evt);
+                jButtonThemDatBanActionPerformed(evt);
             }
         });
 
-        jButtonSuaKhuVuc.setText("Sửa");
-        jButtonSuaKhuVuc.addActionListener(new java.awt.event.ActionListener() {
+        jButtonSuaDatBan.setText("Sửa");
+        jButtonSuaDatBan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSuaKhuVucActionPerformed(evt);
+                jButtonSuaDatBanActionPerformed(evt);
             }
         });
 
-        jButtonXoaKhuVuc.setText("Xóa");
-        jButtonXoaKhuVuc.addActionListener(new java.awt.event.ActionListener() {
+        jButtonXoaDatBan.setText("Xóa");
+        jButtonXoaDatBan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonXoaKhuVucActionPerformed(evt);
+                jButtonXoaDatBanActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Thành Phố");
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel4.setText("Username Khách Hàng");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel2.setText("Ngày Đến");
+
+        jSpinnerDatBanNgayDen_Ngay.setModel(new javax.swing.SpinnerNumberModel(1, 1, 31, 1));
+
+        jSpinnerDatBanNgayDen_Thang.setModel(new javax.swing.SpinnerNumberModel(1, 1, 12, 1));
+
+        jSpinnerDatBanNgayDen_Nam.setModel(new javax.swing.SpinnerNumberModel(2019, 1996, 9999, 1));
+
+        jLabel11.setText("/");
+
+        jLabel12.setText("/");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel10.setText("Giờ Đến");
+
+        jSpinnerDatBanGioDen_Gio.setModel(new javax.swing.SpinnerNumberModel(0, 0, 24, 1));
+
+        jLabel14.setText(":");
+
+        jSpinnerDatBanGioDen_Phut.setModel(new javax.swing.SpinnerNumberModel(0, 0, 59, 1));
+
+        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel15.setText("Số Lượng Người Lớn");
+
+        jSpinnerDatBan_SLNguoiLon.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
+
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel16.setText("Số Lượng Trẻ Em");
+
+        jSpinnerDatBan_SLTreEm.setModel(new javax.swing.SpinnerNumberModel(0, 0, 100, 1));
+
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel17.setText("Tổng Tiền");
+
+        jLabelDonDatBan_TongTien.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabelDonDatBan_TongTien.setForeground(new java.awt.Color(255, 0, 0));
+
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel18.setText("Ghi Chú");
+
+        jTextAreaDatBan_GhiChu.setColumns(20);
+        jTextAreaDatBan_GhiChu.setRows(5);
+        jScrollPane4.setViewportView(jTextAreaDatBan_GhiChu);
 
         javax.swing.GroupLayout jPanelDonDatBanLayout = new javax.swing.GroupLayout(jPanelDonDatBan);
         jPanelDonDatBan.setLayout(jPanelDonDatBanLayout);
         jPanelDonDatBanLayout.setHorizontalGroup(
             jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelDonDatBanLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 744, Short.MAX_VALUE)
-                .addGap(29, 29, 29)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 761, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
-                        .addComponent(jTextFieldTimKhuVuc)
+                        .addComponent(jTextFieldTimDonDatBan)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jToggleButtonTimKhuVuc)
+                        .addComponent(jToggleButtonTimDonDatBan)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonResetKhuVuc))
+                        .addComponent(jButtonResetDonDatBan))
+                    .addComponent(jComboBoxDatBan_KhachHang, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
-                        .addComponent(jButtonThemKhuVuc)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonSuaKhuVuc)
-                        .addGap(69, 69, 69)
-                        .addComponent(jButtonXoaKhuVuc))
+                        .addComponent(jButtonThemDatBan)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                        .addComponent(jButtonSuaDatBan)
+                        .addGap(130, 130, 130)
+                        .addComponent(jButtonXoaDatBan))
                     .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
-                        .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextFieldKhuVucTen, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
-                            .addComponent(jLabel3)
+                        .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
-                            .addComponent(jComboBoxKhuVuc_ThanhPho, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(85, 85, 85)
+                                .addComponent(jSpinnerDatBanGioDen_Gio, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSpinnerDatBanNgayDen_Ngay, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jSpinnerDatBanNgayDen_Thang, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel14))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jSpinnerDatBanGioDen_Phut)
+                            .addComponent(jSpinnerDatBanNgayDen_Nam, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)))
+                    .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
+                        .addComponent(jLabel15)
+                        .addGap(138, 138, 138)
+                        .addComponent(jSpinnerDatBan_SLNguoiLon))
+                    .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
+                        .addComponent(jLabel16)
+                        .addGap(154, 154, 154)
+                        .addComponent(jSpinnerDatBan_SLTreEm))
+                    .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addGap(8, 8, 8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabelDonDatBan_TongTien))
+                    .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
+                        .addComponent(jLabel18)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane4)))
                 .addContainerGap())
         );
         jPanelDonDatBanLayout.setVerticalGroup(
             jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 616, Short.MAX_VALUE)
+            .addComponent(jScrollPane2)
             .addGroup(jPanelDonDatBanLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextFieldTimKhuVuc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButtonTimKhuVuc)
-                    .addComponent(jButtonResetKhuVuc))
-                .addGap(104, 104, 104)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldKhuVucTen, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(16, 16, 16)
+                    .addComponent(jTextFieldTimDonDatBan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jToggleButtonTimDonDatBan)
+                    .addComponent(jButtonResetDonDatBan))
+                .addGap(35, 35, 35)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jComboBoxKhuVuc_ThanhPho, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxDatBan_KhachHang, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41)
                 .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonThemKhuVuc)
-                    .addComponent(jButtonSuaKhuVuc)
-                    .addComponent(jButtonXoaKhuVuc))
+                    .addComponent(jSpinnerDatBanNgayDen_Nam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel2)
+                    .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jSpinnerDatBanNgayDen_Ngay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11)
+                        .addComponent(jSpinnerDatBanNgayDen_Thang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jSpinnerDatBanGioDen_Gio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSpinnerDatBanGioDen_Phut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(jSpinnerDatBan_SLNguoiLon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(jSpinnerDatBan_SLTreEm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabelDonDatBan_TongTien))
+                .addGap(68, 68, 68)
+                .addGroup(jPanelDonDatBanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonThemDatBan)
+                    .addComponent(jButtonSuaDatBan)
+                    .addComponent(jButtonXoaDatBan))
                 .addGap(83, 83, 83))
         );
 
@@ -516,7 +819,7 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
             jPanelCommentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelCommentLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 683, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 748, Short.MAX_VALUE)
                 .addGap(29, 29, 29)
                 .addGroup(jPanelCommentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelCommentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -578,7 +881,7 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
                     .addComponent(jButtonThemTaiKhoan)
                     .addComponent(jButtonSuaTaiKhoan)
                     .addComponent(jButtonXoaTaiKhoan))
-                .addGap(0, 184, Short.MAX_VALUE))
+                .addGap(0, 219, Short.MAX_VALUE))
             .addGroup(jPanelCommentLayout.createSequentialGroup()
                 .addComponent(jScrollPane3)
                 .addContainerGap())
@@ -663,29 +966,29 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
 
     }//GEN-LAST:event_jTableTaiKhoanChonThanhPho
 
-    private void jButtonXoaKhuVucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonXoaKhuVucActionPerformed
-  
-    }//GEN-LAST:event_jButtonXoaKhuVucActionPerformed
+    private void jButtonXoaDatBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonXoaDatBanActionPerformed
+        XoaDatBan();
+    }//GEN-LAST:event_jButtonXoaDatBanActionPerformed
 
-    private void jButtonSuaKhuVucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuaKhuVucActionPerformed
- 
-    }//GEN-LAST:event_jButtonSuaKhuVucActionPerformed
+    private void jButtonSuaDatBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuaDatBanActionPerformed
+        SuaDatBan();
+    }//GEN-LAST:event_jButtonSuaDatBanActionPerformed
 
-    private void jButtonThemKhuVucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonThemKhuVucActionPerformed
- 
-    }//GEN-LAST:event_jButtonThemKhuVucActionPerformed
+    private void jButtonThemDatBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonThemDatBanActionPerformed
+        ThemDatBan();
+    }//GEN-LAST:event_jButtonThemDatBanActionPerformed
 
-    private void jButtonResetKhuVucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetKhuVucActionPerformed
- 
-    }//GEN-LAST:event_jButtonResetKhuVucActionPerformed
+    private void jButtonResetDonDatBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetDonDatBanActionPerformed
+        LoadDatBan();
+    }//GEN-LAST:event_jButtonResetDonDatBanActionPerformed
 
-    private void jToggleButtonTimKhuVucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonTimKhuVucActionPerformed
+    private void jToggleButtonTimDonDatBanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonTimDonDatBanActionPerformed
+        TimDatBan();
+    }//GEN-LAST:event_jToggleButtonTimDonDatBanActionPerformed
 
-    }//GEN-LAST:event_jToggleButtonTimKhuVucActionPerformed
-
-    private void jTableKhuVucChonThanhPho(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableKhuVucChonThanhPho
-
-    }//GEN-LAST:event_jTableKhuVucChonThanhPho
+    private void jTableDatBanChonThanhPho(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableDatBanChonThanhPho
+        ChonDatBan();
+    }//GEN-LAST:event_jTableDatBanChonThanhPho
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         UploadHinhAnhNhaHang();
@@ -747,23 +1050,32 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButtonBack;
-    private javax.swing.JButton jButtonResetKhuVuc;
+    private javax.swing.JButton jButtonResetDonDatBan;
     private javax.swing.JButton jButtonResetTaiKhoan;
-    private javax.swing.JButton jButtonSuaKhuVuc;
+    private javax.swing.JButton jButtonSuaDatBan;
     private javax.swing.JButton jButtonSuaTaiKhoan;
-    private javax.swing.JButton jButtonThemKhuVuc;
+    private javax.swing.JButton jButtonThemDatBan;
     private javax.swing.JButton jButtonThemTaiKhoan;
-    private javax.swing.JButton jButtonXoaKhuVuc;
+    private javax.swing.JButton jButtonXoaDatBan;
     private javax.swing.JButton jButtonXoaTaiKhoan;
-    private javax.swing.JComboBox jComboBoxKhuVuc_ThanhPho;
+    private javax.swing.JComboBox jComboBoxDatBan_KhachHang;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelDonDatBan_TongTien;
     private javax.swing.JLabel jLabelMenuHinhAnhShow;
     private javax.swing.JLabel jLabelNhaHangTen;
     private javax.swing.JPanel jPanel1;
@@ -773,18 +1085,26 @@ public class FormNhaHangDetail extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTableKhuVuc;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JSpinner jSpinnerDatBanGioDen_Gio;
+    private javax.swing.JSpinner jSpinnerDatBanGioDen_Phut;
+    private javax.swing.JSpinner jSpinnerDatBanNgayDen_Nam;
+    private javax.swing.JSpinner jSpinnerDatBanNgayDen_Ngay;
+    private javax.swing.JSpinner jSpinnerDatBanNgayDen_Thang;
+    private javax.swing.JSpinner jSpinnerDatBan_SLNguoiLon;
+    private javax.swing.JSpinner jSpinnerDatBan_SLTreEm;
+    private javax.swing.JTable jTableDatBan;
     private javax.swing.JTable jTableMenu;
     private javax.swing.JTable jTableTaiKhoan;
-    private javax.swing.JTextField jTextFieldKhuVucTen;
+    private javax.swing.JTextArea jTextAreaDatBan_GhiChu;
     private javax.swing.JTextField jTextFieldTaiKhoanEmail;
     private javax.swing.JTextField jTextFieldTaiKhoanPassword;
     private javax.swing.JTextField jTextFieldTaiKhoanSdt;
     private javax.swing.JTextField jTextFieldTaiKhoanTen;
     private javax.swing.JTextField jTextFieldTaiKhoanUsername;
-    private javax.swing.JTextField jTextFieldTimKhuVuc;
+    private javax.swing.JTextField jTextFieldTimDonDatBan;
     private javax.swing.JTextField jTextFieldTimTaiKhoan;
-    private javax.swing.JToggleButton jToggleButtonTimKhuVuc;
+    private javax.swing.JToggleButton jToggleButtonTimDonDatBan;
     private javax.swing.JToggleButton jToggleButtonTimTaiKhoan;
     private javax.swing.JTabbedPane tabMain;
     // End of variables declaration//GEN-END:variables
