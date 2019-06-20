@@ -6,9 +6,11 @@
             <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/UI/FormMain.java</file>
             <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/bussiness/DatBanBUS.java</file>
             <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/model/DatBanModel.java</file>
-            <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/commond/ConvertHelper.java</file>
-            <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/model/DatBanViewModel.java</file>
+            <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/model/DanhGiaViewModel.java</file>
+            <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/bussiness/DanhGiaBUS.java</file>
+            <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/commond/ApiDanhGia.java</file>
             <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/UI/FormNhaHangDetail.java</file>
+            <file>file:/D:/Kal/xampp/htdocs/server/management/javaswing/BookingTableManagement/src/bussiness/ThanhPhoBUS.java</file>
         </group>
     </open-files>
 </project-private>

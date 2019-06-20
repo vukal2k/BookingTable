@@ -9,8 +9,6 @@
 		$query = "SELECT *FROM nhahang";
 	}
 
-  	$data = mysqli_query($connect, $query);
-
   $data = mysqli_query($connect, $query);
 
  
