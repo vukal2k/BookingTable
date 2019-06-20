@@ -22,7 +22,7 @@
         $result = $database->insert('danhgia',$danhGia);
 
         if($result>0){
-            echo "success";\
+            echo "success";
             die();
         }
         else{
