@@ -6,7 +6,7 @@
     if(isset($viewModelJson)&&isset($isComplete)){
         $viewModel = json_decode($viewModelJson);
 
-        $query = "  SELECT t.idtaikhoan,t.tenkhachhang, d.gioden,d.ngayden,t.sdt
+        $query = "  SELECT t.idtaikhoan,t.tenkhachhang, d.gioden,d.ngayden, d.iddatban, t.sdt
                     FROM datban d
                     INNER JOIN nhahang n
                     ON d.idnhahang = n.idnhahang

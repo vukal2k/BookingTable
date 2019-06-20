@@ -4,7 +4,8 @@
     $iddatban = $_GET['iddatban'];
     if(isset($iddatban)){
         $database = new database();
-        $result = $database->fetchsql("SELECT t.tenkhachhang, d.*
+        $result = $database->fetchsql("SELECT t.tenkhachhang, t.sdt, d.idtaikhoan, d.ngayden, d.gioden,
+                                  d.soluongnguoilon, d.soluongtreem, d.ghichu, d.tongtien
                             FROM datban d
                             INNER JOIN taikhoan t
                             ON d.idtaikhoan=t.idtaikhoan

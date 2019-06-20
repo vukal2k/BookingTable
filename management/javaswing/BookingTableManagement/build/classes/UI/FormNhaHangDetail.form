@@ -261,8 +261,7 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="8" pref="8" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace pref="314" max="32767" attributes="0"/>
                               <Component id="jLabelDonDatBan_TongTien" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
@@ -290,14 +289,16 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jComboBoxDatBan_KhachHang" min="-2" pref="25" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="41" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jSpinnerDatBanNgayDen_Nam" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="3" groupAlignment="3" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="jSpinnerDatBanNgayDen_Ngay" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jSpinnerDatBanNgayDen_Thang" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="jSpinnerDatBanNgayDen_Nam" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -624,39 +625,29 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="jScrollPane3" pref="748" max="32767" attributes="0"/>
-                      <EmptySpace min="29" pref="29" max="-2" attributes="0"/>
+                      <Component id="jScrollPane3" pref="738" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="jTextFieldTimTaiKhoan" max="32767" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="jToggleButtonTimTaiKhoan" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="jButtonResetTaiKhoan" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="29" pref="29" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Component id="jTextFieldTimDanhGia" min="-2" pref="206" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="jToggleButtonTimTaiKhoan" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="jButtonResetDanhGia" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabelDanhGia_DoHaiLong" min="-2" pref="371" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jTextFieldTaiKhoanPassword" alignment="0" min="-2" pref="370" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="jButtonSuaTaiKhoan" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jButtonXoaTaiKhoan" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
-                                  <Component id="jButtonThemTaiKhoan" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <EmptySpace pref="20" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="jTextFieldTaiKhoanUsername" alignment="0" min="-2" pref="370" max="-2" attributes="0"/>
-                          <Component id="jTextFieldTaiKhoanTen" alignment="0" min="-2" pref="370" max="-2" attributes="0"/>
-                          <Component id="jTextFieldTaiKhoanSdt" alignment="0" min="-2" pref="370" max="-2" attributes="0"/>
-                          <Component id="jTextFieldTaiKhoanEmail" alignment="0" min="-2" pref="370" max="-2" attributes="0"/>
-                          <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jButtonXoaDanhGia" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -665,40 +656,20 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jTextFieldTimTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextFieldTimDanhGia" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jToggleButtonTimTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonResetTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonResetDanhGia" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
-                      <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldTaiKhoanUsername" min="-2" pref="38" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldTaiKhoanPassword" min="-2" pref="38" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldTaiKhoanTen" min="-2" pref="38" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldTaiKhoanSdt" min="-2" pref="38" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jTextFieldTaiKhoanEmail" min="-2" pref="38" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="107" max="-2" attributes="0"/>
+                      <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jButtonThemTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonSuaTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jButtonXoaTaiKhoan" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="0" pref="219" max="32767" attributes="0"/>
+                      <Component id="jLabelDanhGia_DoHaiLong" min="-2" pref="92" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jButtonXoaDanhGia" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane3" max="32767" attributes="0"/>
+                      <Component id="jScrollPane3" pref="640" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -712,29 +683,51 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="jTableTaiKhoan">
+                <Component class="javax.swing.JTable" name="jTableDanhGia">
                   <Properties>
                     <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="6" rowCount="0">
+                      <Table columnCount="4" rowCount="0">
                         <Column editable="false" title="Id" type="java.lang.Object"/>
                         <Column editable="false" title="Username" type="java.lang.Object"/>
-                        <Column editable="false" title="Password" type="java.lang.Object"/>
-                        <Column editable="false" title="T&#xea;n Kh&#xe1;ch H&#xe0;ng" type="java.lang.Object"/>
-                        <Column editable="true" title="S&#x111;t" type="java.lang.Object"/>
-                        <Column editable="false" title="Email" type="java.lang.Object"/>
+                        <Column editable="false" title="N&#x1ed9;i Dung" type="java.lang.Object"/>
+                        <Column editable="false" title="&#x110;&#x1ed9; H&#xe0;i L&#xf2;ng" type="java.lang.Object"/>
                       </Table>
+                    </Property>
+                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
+                      <TableColumnModel selectionModel="0">
+                        <Column maxWidth="50" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="250" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                          <Title/>
+                          <Editor/>
+                          <Renderer/>
+                        </Column>
+                      </TableColumnModel>
                     </Property>
                     <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTableTaiKhoanChonThanhPho"/>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTableDanhGiaChonThanhPho"/>
                   </Events>
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JTextField" name="jTextFieldTimTaiKhoan">
+            <Component class="javax.swing.JTextField" name="jTextFieldTimDanhGia">
             </Component>
             <Component class="javax.swing.JToggleButton" name="jToggleButtonTimTaiKhoan">
               <Properties>
@@ -744,72 +737,38 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonTimTaiKhoanActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="jButtonResetTaiKhoan">
+            <Component class="javax.swing.JButton" name="jButtonResetDanhGia">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Refresh"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonResetTaiKhoanActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonResetDanhGiaActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JTextField" name="jTextFieldTaiKhoanUsername">
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel5">
+            <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Username"/>
+                <Property name="text" type="java.lang.String" value="&#x110;&#x1ed9; H&#xe0;i L&#xf2;ng Trung B&#xec;nh"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="jButtonThemTaiKhoan">
+            <Component class="javax.swing.JLabel" name="jLabelDanhGia_DoHaiLong">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Th&#xea;m"/>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Tahoma" size="36" style="1"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="cc" red="ff" type="rgb"/>
+                </Property>
+                <Property name="horizontalAlignment" type="int" value="0"/>
+                <Property name="text" type="java.lang.String" value="0"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="jButtonXoaDanhGia">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="X&#xf3;a &#x110;&#xe1;nh Gi&#xe1; &#x110;ang Ch&#x1ecd;n"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonThemTaiKhoanActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonXoaDanhGiaActionPerformed"/>
               </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButtonSuaTaiKhoan">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="S&#x1eed;a"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonSuaTaiKhoanActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="jButtonXoaTaiKhoan">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="X&#xf3;a"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonXoaTaiKhoanActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jTextFieldTaiKhoanPassword">
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel6">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Password"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jTextFieldTaiKhoanTen">
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel7">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="T&#xea;n Kh&#xe1;ch H&#xe0;ng"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel8">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="S&#x1ed1; &#x111;i&#x1ec7;n tho&#x1ea1;i"/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="jTextFieldTaiKhoanSdt">
-            </Component>
-            <Component class="javax.swing.JTextField" name="jTextFieldTaiKhoanEmail">
-            </Component>
-            <Component class="javax.swing.JLabel" name="jLabel9">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Email"/>
-              </Properties>
             </Component>
           </SubComponents>
         </Container>

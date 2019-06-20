@@ -1,7 +1,15 @@
 <?php
   require "dbCon.php";
+  
 
-  $query = "SELECT * FROM nhahang";
+  $searchKey = $_GET["idkhuvuc"];
+	if(isset($searchKey)){
+		$query = "SELECT * FROM nhahang WHERE idkhuvuc = ".$searchKey;
+	}else{
+		$query = "SELECT *FROM nhahang";
+	}
+
+  	$data = mysqli_query($connect, $query);
 
   $data = mysqli_query($connect, $query);
 
