@@ -7,8 +7,8 @@ package commond;
 
 
 public class ApiUrl {
-    public static  String  Host = "http://128.254.10.204:8080/server/javaswing/";
-    public static  String  HostImage = "http://128.254.10.204:8080/server/";
-    public static  String  ApiUpLoad = "http://128.254.10.204:8080/server/upLoadImage.php";
+    public final static  String  Host = "http://localhost/server/javaswing/";
+    public final static  String  HostImage = "http://localhost/server/";
+    public final static  String  ApiUpLoad = HostImage+"upLoadImage.php";
 }
 
