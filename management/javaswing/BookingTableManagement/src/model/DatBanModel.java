@@ -5,10 +5,7 @@
  */
 package model;
 
-/**
- *
- * @author vuanl
- */
+
 public class DatBanModel {
     private int iddatban;
     private int idtaikhoan;

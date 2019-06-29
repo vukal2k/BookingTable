@@ -5,10 +5,7 @@
  */
 package model;
 
-/**
- *
- * @author vuanl
- */
+
 public class TaiKhoanModel {
     	private int idtaikhoan;
 	private String username;

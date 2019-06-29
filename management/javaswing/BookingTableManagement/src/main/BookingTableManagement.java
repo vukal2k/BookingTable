@@ -8,10 +8,7 @@ package main;
 import UI.FormMain;
 import bussiness.ThanhPhoBUS;
 
-/**
- *
- * @author vuanl
- */
+
 public class BookingTableManagement {
 
     /**

@@ -20,10 +20,7 @@ import model.MenuViewModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author vuanl
- */
+
 public class MenuBUS {
     private static final String message_failed="menu thất bại";
     private static final String message_success="menu thành công";

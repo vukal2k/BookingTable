@@ -5,10 +5,7 @@
  */
 package commond;
 
-/**
- *
- * @author vuanl
- */
+
 public class ComboboxItem {
     private int key;
     private String value;

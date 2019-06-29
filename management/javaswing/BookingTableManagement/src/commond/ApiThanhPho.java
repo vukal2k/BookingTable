@@ -5,10 +5,7 @@
  */
 package commond;
 
-/**
- *
- * @author vuanl
- */
+
 public class ApiThanhPho{
     public static String GetAll=ApiUrl.Host+"thanhPho/getAll.php";
     public static String Them=ApiUrl.Host+"thanhPho/them.php";

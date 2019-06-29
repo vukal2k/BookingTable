@@ -5,10 +5,7 @@
  */
 package commond;
 
-/**
- *
- * @author vuanl
- */
+
 public class ApiKhuVuc {
     public static String GetAll=ApiUrl.Host+"khuvuc/getAll.php";
     public static String Them=ApiUrl.Host+"khuvuc/them.php";

@@ -5,10 +5,7 @@
  */
 package commond;
 
-/**
- *
- * @author vuanl
- */
+
 public class ApiMenu {
     public static String GetAll=ApiUrl.Host+"menu/getAll.php";
     public static String Them=ApiUrl.Host+"menu/them.php";

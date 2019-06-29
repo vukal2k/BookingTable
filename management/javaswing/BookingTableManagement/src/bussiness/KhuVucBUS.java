@@ -20,10 +20,7 @@ import model.KhuVucViewModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author vuanl
- */
+
 public class KhuVucBUS {
     private static final String message_failed="khu vực thất bại";
     private static final String message_success="khu vực thành công";

@@ -19,10 +19,7 @@ import model.DanhGiaViewModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author vuanl
- */
+
 public class DanhGiaBUS {
     public static ArrayList getAll(int idnhahang){
         String danhGia = ApiHelper.getData(ApiDanhGia.GetAll+"?idnhahang="+idnhahang);

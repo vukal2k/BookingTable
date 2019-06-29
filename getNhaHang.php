@@ -3,7 +3,7 @@
   
 
   $searchKey = $_GET["idkhuvuc"];
-	if(isset($searchKey)){
+	if($searchKey>0){
 		$query = "SELECT * FROM nhahang WHERE idkhuvuc = ".$searchKey;
 	}else{
 		$query = "SELECT *FROM nhahang";

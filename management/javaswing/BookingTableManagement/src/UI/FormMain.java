@@ -38,10 +38,7 @@ import model.NhaHangViewModel;
 import model.TaiKhoanModel;
 import model.ThanhPhoModel;
 
-/**
- *
- * @author vuanl
- */
+
 public class FormMain extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="propeties"> 
     private final DefaultTableModel defaultTableThanhPho;

@@ -17,10 +17,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map;
 
-/**
- *
- * @author vuanl
- */
+
 public class ApiHelper {
     private final ApiHelper instance = new ApiHelper();
     public ApiHelper(){

@@ -5,10 +5,7 @@
  */
 package model;
 
-/**
- *
- * @author vuanl
- */
+
 public class MenuViewModel {
     private int idmenu;
     private String hinhanh;

@@ -22,10 +22,7 @@ import java.util.List;
  * and open the template in the editor.
  */
 
-/**
- *
- * @author vuanl
- */
+
 public class MultipartUtility {
     private final String boundary;
     private static final String LINE_FEED = "\r\n";

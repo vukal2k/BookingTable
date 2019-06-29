@@ -9,10 +9,7 @@ import java.awt.Component;
 import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
-/**
- *
- * @author vuanl
- */
+
 public class ComboboxItemRender extends BasicComboBoxRenderer {
     public Component getListCellRendererComponent(
             JList list, Object value, int index,

@@ -19,10 +19,7 @@ import model.TaiKhoanModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author vuanl
- */
+
 public class TaiKhoanBUS {
     private static String message_failed="tài khoản thất bại";
     private static String message_success="tài khoản thành công";

@@ -20,10 +20,7 @@ import model.DatBanViewModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author vuanl
- */
+
 public class DatBanBUS {
     private static final String message_failed="đơn đặt bàn thất bại";
     private static final String message_success="đơn đặt bàn thành công";

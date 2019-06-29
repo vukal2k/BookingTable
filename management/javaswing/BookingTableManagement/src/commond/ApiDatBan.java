@@ -5,10 +5,7 @@
  */
 package commond;
 
-/**
- *
- * @author vuanl
- */
+
 public class ApiDatBan {
     public static String GetAll=ApiUrl.Host+"datban/getAll.php";
     public static String Them=ApiUrl.Host+"datban/them.php";

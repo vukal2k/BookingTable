@@ -5,10 +5,7 @@
  */
 package commond;
 
-/**
- *
- * @author vuanl
- */
+
 public class FileItemToPhp {
     private String fileName;
     private String filePath;

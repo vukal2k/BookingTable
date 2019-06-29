@@ -5,10 +5,7 @@
  */
 package commond;
 
-/**
- *
- * @author vuanl
- */
+
 public class ApiNhaHang {
     public static String GetAll=ApiUrl.Host+"nhahang/getAll.php";
     public static String Them=ApiUrl.Host+"nhahang/them.php";

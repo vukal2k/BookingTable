@@ -5,13 +5,10 @@
  */
 package commond;
 
-/**
- *
- * @author vuanl
- */
+
 public class ApiUrl {
-    public static  String  Host = "http://localhost/server/javaswing/";
-    public static  String  HostImage = "http://localhost/server/";
-    public static  String  ApiUpLoad = "http://localhost/server/upLoadImage.php";
+    public static  String  Host = "http://128.254.10.204:8080/server/javaswing/";
+    public static  String  HostImage = "http://128.254.10.204:8080/server/";
+    public static  String  ApiUpLoad = "http://128.254.10.204:8080/server/upLoadImage.php";
 }
 

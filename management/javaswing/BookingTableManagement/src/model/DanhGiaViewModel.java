@@ -5,10 +5,7 @@
  */
 package model;
 
-/**
- *
- * @author vuanl
- */
+
 public class DanhGiaViewModel {
     private int iddanhgia;
     private String username;

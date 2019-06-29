@@ -24,10 +24,7 @@ import model.NhaHangViewModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-/**
- *
- * @author vuanl
- */
+
 public class NhaHangBUS {
     private static final String message_failed="nhà hàng thất bại";
     private static final String message_success="nhà hàng thành công";
@@ -121,8 +118,8 @@ public class NhaHangBUS {
             return "Yêu cầu chọn chủ sở hữu";
         }
         if(fileHinhAnh!=null){
-            if (!(fileHinhAnh.getFileName().contains("jpg") && fileHinhAnh.getFileName().trim().equals("") == false)) {
-                return "File hình ảnh phải là định dạng jpg";
+            if (!((fileHinhAnh.getFileName().contains("jpg"))||(fileHinhAnh.getFileName().contains("png"))) && fileHinhAnh.getFileName().trim().equals("") == false) {
+                return "File hình ảnh phải là định dạng jpg hoặc png";
             }
             //upload file
             MultipartUtility multipart = new MultipartUtility();
